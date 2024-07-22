@@ -11,7 +11,6 @@ import {
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Placeholder from "@public/next.svg";
 
@@ -24,13 +23,11 @@ type NavbarProps = {
 
 export default function Navbar({ logo, destinations }: NavbarProps) {
   const currentPath = usePathname();
-  const current = destinations.findIndex(
-    (d) => (d.href as string).search(currentPath) !== -1,
-  );
+  const current = destinations.findIndex((d) => (d.href as string).search(currentPath) !== -1);
   return (
-    <div className="flex items-center gap-5 h-[56px]">
+    <div className="flex items-center gap-5 h-[56px] w-fit">
       <Image src={logo ?? Placeholder} alt="Website Logo" height={24} />
-      <Breadcrumb className="mb-2">
+      <Breadcrumb>
         <BreadcrumbList className="gap-8">
           {destinations.map((d, i) => (
             <BreadcrumbItem>

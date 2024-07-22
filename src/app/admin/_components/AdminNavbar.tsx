@@ -2,6 +2,10 @@ import Navbar, { Destination } from "@/components/global/Navbar";
 
 const destinations: Destination[] = [
   {
+    href: "/admin",
+    label: "Tổng quan",
+  },
+  {
     href: "/admin/events",
     label: "Sự kiện",
   },
