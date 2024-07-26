@@ -1,28 +1,72 @@
 "use client";
 
-import { Progress } from "@/components/ui/progress";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { EventNoId } from "@/hooks/types";
+
+import BasicEventInfoInner from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
-import CreateEventInner from "../_components/CreateEventInner";
+import CreateVoucherInner, { CreateVoucherForm } from "../_components/CreateVoucherInner";
 
 export default function CreateEventPage() {
+  const eventForm = useForm<EventNoId>({ defaultValues: { games: [] } });
+  const voucherForm = useForm<CreateVoucherForm>();
+
+  const onSubmit = () => {
+    const event = eventForm.getValues();
+    const voucher = voucherForm.getValues();
+
+    event.vouchers = voucher.vouchers;
+
+    console.log(event);
+  };
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="flex min-h-screen flex-col">
       <BrandNavbar />
-      <div className="flex flex-col items-center justify-center grow gap-10 p-20">
-        <div className="w-4/5">
-          <Progress value={20} />
-          <div className="flex justify-between items-center text-xl text-gray-500">
-            <div />
-            <p>Tạo sự kiện</p>
-            <p>Tạo vật phẩm</p>
-            <p>Tạo voucher</p>
-            <div />
-          </div>
-        </div>
-        <div className="container border-2 rounded-sm p-4 shadow-lg">
-          <CreateEventInner />
-        </div>
+      <div className="flex grow flex-col gap-8 bg-slate-300 p-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Tạo sự kiện</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...eventForm}>
+              <form className="space-y-8">
+                <BasicEventInfoInner form={eventForm} />
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Tạo Voucher</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...voucherForm}>
+              <form className="space-y-8">
+                <CreateVoucherInner form={voucherForm} />
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Tạo Voucher</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Form {...voucherForm}>
+              <form className="space-y-8">
+                <CreateVoucherInner form={voucherForm} />
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+        <Button onClick={onSubmit} size="lg" className="text-xl font-medium">
+          Submit
+        </Button>
       </div>
     </main>
   );

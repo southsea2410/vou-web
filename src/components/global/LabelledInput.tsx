@@ -5,11 +5,11 @@ type LabelledInputProps = {
   label: string;
 } & InputProps;
 
-export default function LabelledInput({ label, id, ...inputProps }: LabelledInputProps) {
+export default function LabelledInput({ label, id, name, ...inputProps }: LabelledInputProps) {
   return (
-    <div>
-      <Label htmlFor={id}>{label}</Label>
-      <Input id={id} {...inputProps} />
+    <div className="grid w-full items-center gap-1.5">
+      <Label htmlFor={id ?? name}>{label}</Label>
+      <Input id={id ?? name} {...inputProps} name={name} />
     </div>
   );
 }

@@ -12,7 +12,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import Placeholder from "@public/next.svg";
+import Placeholder from "@public/vou.png";
 
 type Destination = LinkProps & { label: string };
 
@@ -25,12 +25,12 @@ export default function Navbar({ logo, destinations }: NavbarProps) {
   const currentPath = usePathname();
   const current = destinations.findIndex((d) => (d.href as string).search(currentPath) !== -1);
   return (
-    <div className="flex items-center gap-5 h-[56px] w-fit">
-      <Image src={logo ?? Placeholder} alt="Website Logo" height={24} />
+    <div className="flex h-[56px] w-fit items-center gap-5">
+      <Image src={logo ?? Placeholder} alt="Website Logo" height={64} />
       <Breadcrumb>
         <BreadcrumbList className="gap-8">
           {destinations.map((d, i) => (
-            <BreadcrumbItem>
+            <BreadcrumbItem key={d.label}>
               {!!current && current === i ? (
                 <BreadcrumbPage>{d.label}</BreadcrumbPage>
               ) : (
