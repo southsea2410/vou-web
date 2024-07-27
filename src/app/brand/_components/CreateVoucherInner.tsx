@@ -19,6 +19,10 @@ export type CreateVoucherForm = {
     code: string;
     is_qr: boolean;
     expired_date: Date;
+    item: {
+      name: string;
+      description: string;
+    };
   } & Pick<Voucher, "description">)[];
 };
 
@@ -35,8 +39,16 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
     <div>
       <Button
         type="button"
-        onClick={() => append({ code: "", is_qr: false, description: "", expired_date: tommorow })}
-        className="mb-3"
+        onClick={() =>
+          append({
+            code: "",
+            is_qr: false,
+            description: "",
+            expired_date: tommorow,
+            item: { name: "", description: "" },
+          })
+        }
+        className="mb-2"
       >
         Thêm voucher
       </Button>
@@ -115,7 +127,28 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
               </Button>
             </div>
           </div>
-          <Separator className={"mb-5 mt-3 " + (index === fields.length - 1 ? "hidden" : "")} />
+        </div>
+      ))}
+      <Separator className="my-2" />
+      <p className="mb-2 text-xl font-bold">Vật phẩm</p>
+      <div className="flex items-start gap-4 font-medium">
+        <p className="basis-1/12">STT</p>
+        <p className="basis-1/5">Tên vật phẩm</p>
+        <p className="basis-1/3">Mô tả</p>
+        <p className="basis-1/6 text-wrap">Số lượng quy đổi</p>
+        <p className="basis-1/6">Hình vật phẩm</p>
+      </div>
+      {fields.map((field, index) => (
+        <div key={field.id} className="mb-2 flex items-start gap-4 font-medium">
+          <p className="basis-1/12">{index}</p>
+          <Input className="basis-1/5" placeholder="Ngọc rồng 4 sao" />
+          <Textarea
+            {...form.register(`vouchers.${index}.item.description`)}
+            className="basis-1/3"
+            placeholder="Là 1 trong 7 viên ngọc rồng..."
+          />
+          <Input type="number" className="basis-1/6" />
+          <Input type="file" className="basis-1/6" />
         </div>
       ))}
     </div>

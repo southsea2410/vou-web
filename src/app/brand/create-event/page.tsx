@@ -1,33 +1,33 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { EventNoId } from "@/hooks/types";
 
-import BasicEventInfoInner from "../_components/BasicEventInfoInner";
+import BasicEventInfoInner, { BasicEventInfoForm } from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherInner, { CreateVoucherForm } from "../_components/CreateVoucherInner";
+import InviteCoopInner, { InviteCoopForm } from "../_components/InviteCoopInner";
 
 export default function CreateEventPage() {
-  const eventForm = useForm<EventNoId>({ defaultValues: { games: [] } });
-  const voucherForm = useForm<CreateVoucherForm>();
+  const eventForm = useForm<BasicEventInfoForm>({ defaultValues: { games: [] } });
+  const voucherForm = useForm<CreateVoucherForm>({ defaultValues: { vouchers: [] } });
+  const inviteForm = useForm<InviteCoopForm>({ defaultValues: { invites: [{ phone: "" }] } });
 
   const onSubmit = () => {
     const event = eventForm.getValues();
     const voucher = voucherForm.getValues();
 
-    event.vouchers = voucher.vouchers;
+    // event.vouchers = voucher.vouchers;
 
     console.log(event);
   };
   return (
     <main className="flex min-h-screen flex-col">
       <BrandNavbar />
-      <div className="flex grow flex-col gap-8 bg-slate-300 p-4">
+      <div className="flex grow flex-col gap-4 bg-slate-300 p-4">
         <Card>
           <CardHeader>
             <CardTitle>Tạo sự kiện</CardTitle>
@@ -54,12 +54,12 @@ export default function CreateEventPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Tạo Voucher</CardTitle>
+            <CardTitle>Mời đối tác</CardTitle>
           </CardHeader>
           <CardContent>
-            <Form {...voucherForm}>
+            <Form {...inviteForm}>
               <form className="space-y-8">
-                <CreateVoucherInner form={voucherForm} />
+                <InviteCoopInner form={inviteForm} />
               </form>
             </Form>
           </CardContent>

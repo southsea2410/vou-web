@@ -1,6 +1,7 @@
 import { UseFormReturn } from "react-hook-form";
 
 import DatePickerForm from "@/components/global/DatePickerForm";
+import LabelledInput from "@/components/global/LabelledInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
@@ -29,7 +30,15 @@ const games: Game[] = [
   },
 ];
 
-export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Event> }) {
+export type BasicEventInfoForm = {
+  name: string;
+  // image: FileList;
+  start_date: Date;
+  end_date: Date;
+  games: Event["games"];
+};
+
+export default function BasicEventInfoInner({ form }: { form: UseFormReturn<BasicEventInfoForm> }) {
   return (
     <div className="grid grid-cols-2 gap-20">
       <div className="flex flex-col gap-3">
@@ -50,19 +59,7 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Even
         <DatePickerForm form={form} name="end_date" label="Ngày kết thúc sự kiện" />
       </div>
       <div className="flex flex-col gap-3">
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Thumbnail sự kiện</FormLabel>
-              <FormControl>
-                <Input type="file" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <LabelledInput label="Thumbnail sự kiện" type="file" />
         <FormField
           control={form.control}
           name="games"

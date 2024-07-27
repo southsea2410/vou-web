@@ -1,16 +1,50 @@
-import { DateRangePicker } from "@/components/global/DateRangePicker";
-import LabelledInput from "@/components/global/LabelledInput";
-import { Label } from "@/components/ui/label";
+import { TrashIcon } from "lucide-react";
+import { useFieldArray, UseFormReturn } from "react-hook-form";
 
-export default function InviteCoopInner() {
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
+export type InviteCoopForm = {
+  invites: {
+    phone: string;
+  }[];
+};
+
+export default function InviteCoopInner({ form }: { form: UseFormReturn<InviteCoopForm> }) {
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "invites",
+  });
+
+  const handleAdd = () => {
+    append({ phone: "" });
+  };
+
   return (
-    <div className="flex flex-col gap-3">
-      <LabelledInput id="eventName" label="Tên sự kiện" />
-      <div className="grid w-full items-center gap-1.5">
-        <Label>Thời gian diễn ra</Label>
-        <DateRangePicker className="w-full" />
+    <div>
+      <Button type="button" onClick={handleAdd} className="mb-2">
+        Mời thêm
+      </Button>
+      <div className="flex flex-col gap-2">
+        {fields.map((field, index) => (
+          <div key={field.id} className="flex gap-2">
+            <Input
+              placeholder="SDT đối tác"
+              {...form.register(`invites.${index}.phone`)}
+              className="w-52"
+            />
+            <Button
+              type="button"
+              size="icon"
+              variant="destructive"
+              className="aspect-square"
+              onClick={() => remove(index)}
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
       </div>
-      <LabelledInput id="eventThumbnail" label="Thumbnail sự kiện (ảnh 16:9)" type="file" />
     </div>
   );
 }
