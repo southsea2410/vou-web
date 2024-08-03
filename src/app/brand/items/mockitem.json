@@ -1,0 +1,80 @@
+[
+  {
+    "id": "1",
+    "name": "Purple Glass",
+    "icon": "/game_item_example.png",
+    "description": "A purple glass that can be used to drink water."
+  },
+  {
+    "id": "2",
+    "name": "Red Glass",
+    "icon": "/game_item_example.png",
+    "description": "A red glass that can be used to drink water."
+  },
+  {
+    "id": "3",
+    "name": "Blue Glass",
+    "icon": "/game_item_example.png",
+    "description": "A blue glass that can be used to drink water."
+  },
+  {
+    "id": "4",
+    "name": "Red Bottle",
+    "icon": "/game_item_example.png",
+    "description": "A red bottle that can be used to store liquids."
+  },
+  {
+    "id": "5",
+    "name": "Green Plate",
+    "icon": "/game_item_example.png",
+    "description": "A green plate for serving food."
+  },
+  {
+    "id": "6",
+    "name": "Yellow Mug",
+    "icon": "/game_item_example.png",
+    "description": "A yellow mug for drinking hot beverages."
+  },
+  {
+    "id": "7",
+    "name": "Purple Spoon",
+    "icon": "/game_item_example.png",
+    "description": "A purple spoon for eating."
+  },
+  {
+    "id": "8",
+    "name": "Orange Fork",
+    "icon": "/game_item_example.png",
+    "description": "An orange fork for eating."
+  },
+  {
+    "id": "9",
+    "name": "Black Knife",
+    "icon": "/game_item_example.png",
+    "description": "A black knife for cutting food."
+  },
+  {
+    "id": "10",
+    "name": "White Bowl",
+    "icon": "/game_item_example.png",
+    "description": "A white bowl for serving soup."
+  },
+  {
+    "id": "11",
+    "name": "Silver Tray",
+    "icon": "/game_item_example.png",
+    "description": "A silver tray for carrying items."
+  },
+  {
+    "id": "12",
+    "name": "Gold Cup",
+    "icon": "/game_item_example.png",
+    "description": "A gold cup for drinking."
+  },
+  {
+    "id": "13",
+    "name": "Bronze Pitcher",
+    "icon": "/game_item_example.png",
+    "description": "A bronze pitcher for pouring liquids."
+  }
+]

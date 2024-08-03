@@ -1,30 +1,47 @@
 import { format } from "date-fns";
 import { vi } from "date-fns/locale";
-import { CalendarIcon, TrashIcon } from "lucide-react";
+import { CalendarIcon, CheckIcon, ChevronsUpDown, Gift, SortAsc, TrashIcon } from "lucide-react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Voucher } from "@/hooks/types";
 import { cn } from "@/lib/utils";
+import { ItemSelect, Voucher } from "@/services/types";
 
 export type CreateVoucherForm = {
   vouchers: ({
     code: string;
     is_qr: boolean;
     expired_date: Date;
-    item: {
-      name: string;
-      description: string;
-    };
+    item_id: string;
+    item_quantity: number;
   } & Pick<Voucher, "description">)[];
 };
+
+const mockItems: ItemSelect[] = [
+  {
+    id: "1",
+    name: "Ngọc rồng 4 sao",
+  },
+  {
+    id: "2",
+    name: "Ngọc rồng 5 sao",
+  },
+];
 
 export default function CreateVoucherInner({ form }: { form: UseFormReturn<CreateVoucherForm> }) {
   const { fields, append, remove } = useFieldArray({
@@ -45,7 +62,8 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
             is_qr: false,
             description: "",
             expired_date: tommorow,
-            item: { name: "", description: "" },
+            item_id: "",
+            item_quantity: 0,
           })
         }
         className="mb-2"
@@ -77,14 +95,14 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
               control={form.control}
               name={`vouchers.${index}.expired_date`}
               render={({ field }) => (
-                <FormItem className="flex basis-1/6 flex-col">
+                <FormItem className="flex shrink basis-1/6 flex-col">
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
                           variant={"outline"}
                           className={cn(
-                            "pl-3 text-left font-normal",
+                            "overflow-clip pl-3 text-left font-normal",
                             !field.value && "text-muted-foreground",
                           )}
                         >
@@ -134,21 +152,66 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
       <div className="flex items-start gap-4 font-medium">
         <p className="basis-1/12">STT</p>
         <p className="basis-1/5">Tên vật phẩm</p>
-        <p className="basis-1/3">Mô tả</p>
         <p className="basis-1/6 text-wrap">Số lượng quy đổi</p>
-        <p className="basis-1/6">Hình vật phẩm</p>
       </div>
       {fields.map((field, index) => (
         <div key={field.id} className="mb-2 flex items-start gap-4 font-medium">
-          <p className="basis-1/12">{index}</p>
-          <Input className="basis-1/5" placeholder="Ngọc rồng 4 sao" />
-          <Textarea
-            {...form.register(`vouchers.${index}.item.description`)}
-            className="basis-1/3"
-            placeholder="Là 1 trong 7 viên ngọc rồng..."
+          <p className="basis-1/12">{index + 1}.</p>
+          <FormField
+            control={form.control}
+            name={`vouchers.${index}.item_id`}
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "w-[200px] justify-between",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value
+                          ? mockItems.find((i) => i.name === field.value)?.name
+                          : "Chọn vật phẩm"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                      <CommandInput placeholder="Tìm kiếm..." className="h-9" />
+                      <CommandList>
+                        <CommandEmpty>No framework found.</CommandEmpty>
+                        <CommandGroup>
+                          {mockItems.map((i) => (
+                            <CommandItem
+                              value={i.name}
+                              key={i.id}
+                              onSelect={() => {
+                                form.setValue(`vouchers.${index}.item_id`, i.id);
+                              }}
+                            >
+                              {i.name}
+                              <CheckIcon
+                                className={cn(
+                                  "ml-auto h-4 w-4",
+                                  i.name === field.value ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+              </FormItem>
+            )}
           />
           <Input type="number" className="basis-1/6" />
-          <Input type="file" className="basis-1/6" />
         </div>
       ))}
     </div>

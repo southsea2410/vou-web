@@ -20,3 +20,12 @@ export type Voucher = {
 
 export type VoucherNoId = Omit<Voucher, "id" | "brand_id">;
 export type EventNoId = Omit<Event, "id">;
+
+export type Item = {
+  id: string;
+  name: string;
+  icon: string;
+  description: string;
+};
+
+export type ItemSelect = Pick<Item, "id" | "name">;

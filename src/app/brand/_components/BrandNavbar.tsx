@@ -12,11 +12,15 @@ const destinations: Destination[] = [
     href: "/brand/events",
     label: "Sự kiện",
   },
+  {
+    href: "/brand/items",
+    label: "Vật phẩm",
+  },
 ];
 
 export default function BrandNavbar() {
   return (
-    <div className="flex gap-4 items-center border-b border-gray-100">
+    <div className="flex items-center gap-4 border-b border-gray-100">
       <Navbar destinations={destinations} />
       <Button asChild>
         <Link href="/brand/create-event">Tạo sự kiện</Link>

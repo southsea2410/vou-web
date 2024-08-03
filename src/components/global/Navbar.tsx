@@ -23,7 +23,10 @@ type NavbarProps = {
 
 export default function Navbar({ logo, destinations }: NavbarProps) {
   const currentPath = usePathname();
-  const current = destinations.findIndex((d) => (d.href as string).search(currentPath) !== -1);
+  const current = destinations.findIndex((d) => {
+    return currentPath === d.href;
+  });
+
   return (
     <div className="flex h-[56px] w-fit items-center gap-5">
       <Image src={logo ?? Placeholder} alt="Website Logo" height={64} />
@@ -31,7 +34,7 @@ export default function Navbar({ logo, destinations }: NavbarProps) {
         <BreadcrumbList className="gap-8">
           {destinations.map((d, i) => (
             <BreadcrumbItem key={d.label}>
-              {!!current && current === i ? (
+              {current === i ? (
                 <BreadcrumbPage>{d.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>

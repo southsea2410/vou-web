@@ -14,7 +14,7 @@ import InviteCoopInner, { InviteCoopForm } from "../_components/InviteCoopInner"
 export default function CreateEventPage() {
   const eventForm = useForm<BasicEventInfoForm>({ defaultValues: { games: [] } });
   const voucherForm = useForm<CreateVoucherForm>({ defaultValues: { vouchers: [] } });
-  const inviteForm = useForm<InviteCoopForm>({ defaultValues: { invites: [{ phone: "" }] } });
+  const inviteForm = useForm<InviteCoopForm>({ defaultValues: { invites: [{ email: "" }] } });
 
   const onSubmit = () => {
     const event = eventForm.getValues();

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 
 export type InviteCoopForm = {
   invites: {
-    phone: string;
+    email: string;
   }[];
 };
 
@@ -17,7 +17,7 @@ export default function InviteCoopInner({ form }: { form: UseFormReturn<InviteCo
   });
 
   const handleAdd = () => {
-    append({ phone: "" });
+    append({ email: "" });
   };
 
   return (
@@ -29,8 +29,9 @@ export default function InviteCoopInner({ form }: { form: UseFormReturn<InviteCo
         {fields.map((field, index) => (
           <div key={field.id} className="flex gap-2">
             <Input
-              placeholder="SDT đối tác"
-              {...form.register(`invites.${index}.phone`)}
+              type="email"
+              placeholder="Email đối tác"
+              {...form.register(`invites.${index}.email`)}
               className="w-52"
             />
             <Button
