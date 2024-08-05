@@ -12,15 +12,12 @@ export default function MetabaseFrame() {
   const [src, setSrc] = useState<string | undefined>(undefined);
 
   const metabase_url = (token: string) =>
-    METABASE_SITE_URL +
-    "/embed/dashboard/" +
-    token +
-    "#bordered=true&titled=true";
+    METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true";
 
   useEffect(() => {
     console.log("token", token);
     if (isSuccess) setSrc(metabase_url(token.value));
-  }, [token, isSuccess, setSrc]);
+  }, [token, isSuccess, setSrc, metabase_url]);
 
   return /*#__PURE__*/ React.createElement("iframe", {
     src: src,

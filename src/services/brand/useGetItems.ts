@@ -8,12 +8,8 @@ async function getItems() {
   return res.data;
 }
 
-type UseQueryOptionsWithoutQueryKey<T> = Omit<UseQueryOptions<T>, "queryKey">;
+type UseQueryOptionsOmitted<T> = Omit<UseQueryOptions<T>, "queryKey" | "queryFn">;
 
-export default function useGetItems({
-  queryKey = ["items"],
-  queryFn = getItems,
-  ...opts
-}: UseQueryOptionsWithoutQueryKey<Item[]>) {
-  return useQuery<Item[]>({ queryKey, queryFn, ...opts });
+export default function useGetItems({ ...opts }: UseQueryOptionsOmitted<Item[]>) {
+  return useQuery<Item[]>({ queryKey: ["items"], queryFn: getItems, ...opts });
 }

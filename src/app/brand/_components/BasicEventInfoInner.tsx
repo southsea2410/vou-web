@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Event } from "@/hooks/types";
+import { Event } from "@/services/types";
 
 type Game = {
   id: Event["games"][number];

@@ -7,7 +7,14 @@ import { useForm } from "react-hook-form";
 import LabelledInput from "@/components/global/LabelledInput";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -16,7 +23,6 @@ import { toast } from "@/components/ui/use-toast";
 import useDeleteItem from "@/services/brand/useDeleteItem";
 import useGetItems from "@/services/brand/useGetItems";
 import { Item } from "@/services/types";
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
@@ -65,7 +71,7 @@ export default function ItemsPage() {
   return (
     <main className="min-h-screen">
       <BrandNavbar />
-      <div className="p-6">
+      <div className="container py-4">
         <div className="flex items-center justify-between">
           <h1 className="mb-2 text-3xl">Items Management</h1>
           <CreateItemDialog />

@@ -29,3 +29,9 @@ export type Item = {
 };
 
 export type ItemSelect = Pick<Item, "id" | "name">;
+
+enum VoucherUnitValue {
+  PERCENT,
+  MINUS,
+  MINUS_PERCENT,
+}

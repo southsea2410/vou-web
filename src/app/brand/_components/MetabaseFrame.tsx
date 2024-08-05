@@ -17,7 +17,7 @@ export default function MetabaseFrame() {
   useEffect(() => {
     console.log("token", token);
     if (isSuccess) setSrc(metabase_url(token.value));
-  }, [token, isSuccess, setSrc]);
+  }, [token, isSuccess, setSrc, metabase_url]);
 
   return /*#__PURE__*/ React.createElement("iframe", {
     src: src,
