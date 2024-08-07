@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
 
 import BasicEventInfoInner, { BasicEventInfoForm } from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
@@ -17,11 +18,25 @@ export default function CreateEventPage() {
   const voucherForm = useForm<CreateVoucherForm>({ defaultValues: { vouchers: [] } });
   const inviteForm = useForm<InviteCoopForm>({ defaultValues: { invites: [{ email: "" }] } });
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const event = eventForm.getValues();
-    const voucher = voucherForm.getValues();
+    const vouchers = voucherForm.getValues();
+    const invites = inviteForm.getValues();
 
-    // event.vouchers = voucher.vouchers;
+    event.vouchers = vouchers.vouchers;
+    event.invites = invites.invites;
+
+    if (!(await eventForm.trigger()))
+      toast({ variant: "destructive", title: "Event info error\n" + JSON.stringify(event) });
+    else if (!(await voucherForm.trigger()))
+      toast({ variant: "destructive", title: "Voucher info error\n" + JSON.stringify(vouchers) });
+    else if (!(await inviteForm.trigger()))
+      toast({ variant: "destructive", title: "Invite info error\n" + JSON.stringify(invites) });
+    else
+      toast({
+        title: "Event created",
+        description: "The event has been created successfully\n" + JSON.stringify(event),
+      });
 
     console.log(event);
   };
@@ -31,7 +46,7 @@ export default function CreateEventPage() {
       <div className="flex grow flex-col gap-4 bg-slate-300 p-4">
         <Card>
           <CardHeader>
-            <CardTitle>Tạo sự kiện</CardTitle>
+            <CardTitle>Create Event Information</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...eventForm}>
@@ -43,7 +58,7 @@ export default function CreateEventPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Tạo Voucher</CardTitle>
+            <CardTitle>Create Vouchers</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...voucherForm}>
@@ -55,7 +70,7 @@ export default function CreateEventPage() {
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Mời đối tác</CardTitle>
+            <CardTitle>Invite Cooperations</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...inviteForm}>

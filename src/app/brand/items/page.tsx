@@ -35,7 +35,7 @@ export type DialogState = {
 };
 
 export default function ItemsPage() {
-  const { data: items, isLoading } = useGetItems({
+  const { data: items, isLoading } = useGetItems("abc", {
     initialData: mockItems,
   });
 

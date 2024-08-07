@@ -22,26 +22,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ItemSelect, Voucher } from "@/services/types";
 
+import CreateVoucherItemInput from "./CreateVoucherItemInput";
+
 export type CreateVoucherForm = {
   vouchers: ({
     code: string;
     is_qr: boolean;
     expired_date: Date;
-    item_id: string;
-    item_quantity: number;
+    quantity: number;
+    items: {
+      item_id: string;
+      item_quantity: number;
+    }[];
   } & Pick<Voucher, "description">)[];
 };
-
-const mockItems: ItemSelect[] = [
-  {
-    id: "1",
-    name: "Ngọc rồng 4 sao",
-  },
-  {
-    id: "2",
-    name: "Ngọc rồng 5 sao",
-  },
-];
 
 export default function CreateVoucherInner({ form }: { form: UseFormReturn<CreateVoucherForm> }) {
   const { fields, append, remove } = useFieldArray({
@@ -62,8 +56,13 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
             is_qr: false,
             description: "",
             expired_date: tommorow,
-            item_id: "",
-            item_quantity: 0,
+            quantity: 0,
+            items: [
+              {
+                item_id: "",
+                item_quantity: 0,
+              },
+            ],
           })
         }
         className="mb-2"
@@ -81,7 +80,7 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
       </div>
       {fields.map((field, index) => (
         <div key={field.id}>
-          <div key={field.id} className="flex items-start gap-4">
+          <div className="flex items-start gap-4">
             <p className="mt-2 basis-8 text-base font-medium">{index + 1}.</p>
             <div className="mt-3 flex basis-28 items-center gap-1.5">
               <Checkbox {...form.register(`vouchers.${index}.is_qr`)} />
@@ -145,75 +144,16 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
               </Button>
             </div>
           </div>
+          <CreateVoucherItemInput form={form} voucherIndex={index} />
+          <Separator className="my-2" />
         </div>
       ))}
-      <Separator className="my-2" />
       <p className="mb-2 text-xl font-bold">Vật phẩm</p>
       <div className="flex items-start gap-4 font-medium">
         <p className="basis-1/12">STT</p>
         <p className="basis-1/5">Tên vật phẩm</p>
         <p className="basis-1/6 text-wrap">Số lượng quy đổi</p>
       </div>
-      {fields.map((field, index) => (
-        <div key={field.id} className="mb-2 flex items-start gap-4 font-medium">
-          <p className="basis-1/12">{index + 1}.</p>
-          <FormField
-            control={form.control}
-            name={`vouchers.${index}.item_id`}
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "w-[200px] justify-between",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? mockItems.find((i) => i.name === field.value)?.name
-                          : "Chọn vật phẩm"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="Tìm kiếm..." className="h-9" />
-                      <CommandList>
-                        <CommandEmpty>No framework found.</CommandEmpty>
-                        <CommandGroup>
-                          {mockItems.map((i) => (
-                            <CommandItem
-                              value={i.name}
-                              key={i.id}
-                              onSelect={() => {
-                                form.setValue(`vouchers.${index}.item_id`, i.id);
-                              }}
-                            >
-                              {i.name}
-                              <CheckIcon
-                                className={cn(
-                                  "ml-auto h-4 w-4",
-                                  i.name === field.value ? "opacity-100" : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </FormItem>
-            )}
-          />
-          <Input type="number" className="basis-1/6" />
-        </div>
-      ))}
     </div>
   );
 }

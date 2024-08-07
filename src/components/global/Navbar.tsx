@@ -4,6 +4,7 @@ import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link, { LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
+import { title } from "process";
 
 import {
   Breadcrumb,
@@ -18,10 +19,11 @@ type Destination = LinkProps & { label: string };
 
 type NavbarProps = {
   logo?: StaticImport;
+  title: string;
   destinations: Destination[];
 };
 
-export default function Navbar({ logo, destinations }: NavbarProps) {
+export default function Navbar({ logo, title, destinations }: NavbarProps) {
   const currentPath = usePathname();
   const current = destinations.findIndex((d) => {
     return currentPath === d.href;
@@ -30,6 +32,7 @@ export default function Navbar({ logo, destinations }: NavbarProps) {
   return (
     <div className="flex h-[56px] w-fit items-center gap-5">
       <Image src={logo ?? Placeholder} alt="Website Logo" height={64} />
+      <p className="text-2xl font-medium">{title}</p>
       <Breadcrumb>
         <BreadcrumbList className="gap-8">
           {destinations.map((d, i) => (

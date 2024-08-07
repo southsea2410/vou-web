@@ -21,6 +21,8 @@ type DatePickerFormProps = {
   name: string;
   label?: string;
   placeholder?: string;
+  disabledFn?: (date: Date) => boolean;
+  required?: boolean;
 };
 
 export default function DatePickerForm({
@@ -28,6 +30,8 @@ export default function DatePickerForm({
   name,
   label,
   placeholder = "Chọn ngày",
+  disabledFn = (date) => date < new Date(),
+  required = false,
 }: DatePickerFormProps) {
   return (
     <FormField
@@ -56,8 +60,9 @@ export default function DatePickerForm({
                 mode="single"
                 selected={field.value}
                 onSelect={field.onChange}
-                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                disabled={disabledFn}
                 initialFocus
+                required={required}
               />
             </PopoverContent>
           </Popover>
