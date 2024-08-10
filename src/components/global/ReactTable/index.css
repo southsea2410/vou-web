@@ -1,0 +1,52 @@
+.resizer {
+  @apply hover:bg-GRAY-07 bg-transparent;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  right: 0;
+  width: 5px;
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.resizer.isResizing {
+  @apply bg-Blue-40;
+  opacity: 1;
+}
+
+table {
+  @apply table-fixed border-collapse;
+  position: relative;
+}
+
+thead {
+  position: sticky;
+  top: 0;
+}
+
+table,
+th {
+  @apply border-GRAY-03 border;
+}
+
+th {
+  @apply text-GRAY-06 relative select-none font-bold;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+tbody tr:hover {
+  @apply bg-GRAY-02;
+}
+
+th,
+td {
+  @apply border-t-GRAY-03 border-b-GRAY-03 overflow-hidden text-ellipsis whitespace-nowrap border-b border-t;
+}
+
+td {
+  @apply px-3 py-4 font-medium;
+  font-size: 14px;
+  line-height: 20px;
+}

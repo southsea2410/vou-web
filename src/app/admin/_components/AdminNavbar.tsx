@@ -3,22 +3,22 @@ import Navbar, { Destination } from "@/components/global/Navbar";
 const destinations: Destination[] = [
   {
     href: "/admin",
-    label: "Tổng quan",
+    label: "General",
   },
   {
     href: "/admin/events",
-    label: "Sự kiện",
+    label: "Events",
   },
   {
     href: "/admin/accounts",
-    label: "Tài khoản",
+    label: "Accounts",
   },
   {
     href: "/admin/brands",
-    label: "Thương hiệu",
+    label: "Brands",
   },
 ];
 
 export default function AdminNavbar() {
-  return <Navbar destinations={destinations} />;
+  return <Navbar title="Admin - Management center" destinations={destinations} />;
 }

@@ -32,7 +32,7 @@ export default function Navbar({ logo, title, destinations }: NavbarProps) {
   return (
     <div className="flex h-[56px] w-fit items-center gap-5">
       <Image src={logo ?? Placeholder} alt="Website Logo" height={64} />
-      <p className="text-2xl font-medium">{title}</p>
+      <p className="text-2xl font-medium text-primary">{title}</p>
       <Breadcrumb>
         <BreadcrumbList className="gap-8">
           {destinations.map((d, i) => (

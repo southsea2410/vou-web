@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Event } from "@/services/types";
 
 import Timepicker from "./Timepicker";
+import { BasicEventInfoForm } from "@/services/brand/formSchemas";
 
 type Game = {
   id: Event["games"][number];
@@ -32,15 +33,6 @@ const games: Game[] = [
     label: "Shake",
   },
 ];
-
-export type BasicEventInfoForm = {
-  name: string;
-  // image: FileList;
-  start_date: Date;
-  end_date: Date;
-  games: Event["games"];
-  game_time?: string;
-};
 
 export default function BasicEventInfoInner({ form }: { form: UseFormReturn<BasicEventInfoForm> }) {
   const disableGameTime = !form.watch("games").includes("trivia");
