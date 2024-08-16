@@ -27,7 +27,7 @@ import { Item } from "@/services/types";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
 import ItemFrame from "../_components/ItemFrame";
-import mockItems from "./mockitem.json";
+import mockItems from "@/services/mocks/mockItems";
 
 export type DialogState = {
   open: boolean;

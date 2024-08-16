@@ -3,35 +3,30 @@ import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EventFormData } from "@/services/brand/formSchemas";
 
-export type InviteCoopForm = {
-  invites: {
-    email: string;
-  }[];
-};
-
-export default function InviteCoopInner({ form }: { form: UseFormReturn<InviteCoopForm> }) {
+export default function InviteCoopInner({ form }: { form: UseFormReturn<EventFormData> }) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "invites",
+    name: "brandIds",
   });
 
   const handleAdd = () => {
-    append({ email: "" });
+    append({ id: "" });
   };
 
   return (
     <div>
       <Button type="button" onClick={handleAdd} className="mb-2">
-        Mời thêm
+        Invite more
       </Button>
       <div className="flex flex-col gap-2">
         {fields.map((field, index) => (
           <div key={field.id} className="flex gap-2">
             <Input
               type="email"
-              placeholder="Email đối tác"
-              {...form.register(`invites.${index}.email`)}
+              placeholder="otherbrand@gmail.com"
+              {...form.register(`brandIds.${index}.id` as "brandIds.0.id")}
               className="w-52"
             />
             <Button

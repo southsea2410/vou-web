@@ -2,14 +2,13 @@ import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
-
-import { BasicEventInfoForm } from "./BasicEventInfoInner";
+import { EventFormData } from "@/services/brand/formSchemas";
 
 export default function Timepicker({
   form,
   disabled,
 }: {
-  form: UseFormReturn<BasicEventInfoForm>;
+  form: UseFormReturn<EventFormData>;
   disabled: boolean;
 }) {
   const [time, setTime] = useState<[number, number]>([0, 0]);
@@ -40,7 +39,7 @@ export default function Timepicker({
   };
 
   useEffect(() => {
-    form.setValue("game_time", time.join(":"));
+    form.setValue("trivia_time", time.join(":"));
   }, [time, form]);
 
   return (

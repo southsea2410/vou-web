@@ -1,44 +1,38 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
+import { FieldValue, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { useRef } from "react";
 
-type DatePickerFormProps = {
-  form: any;
-  name: string;
+type DatePickerFormProps<T extends object> = {
+  form: UseFormReturn<T>;
+  name: FieldValue<T>;
   label?: string;
   placeholder?: string;
   disabledFn?: (date: Date) => boolean;
   required?: boolean;
 };
 
-export default function DatePickerForm({
+export default function DatePickerForm<T extends object>({
   form,
   name,
   label,
-  placeholder = "Chọn ngày",
+  placeholder = "Choose a date",
   disabledFn = (date) => date < new Date(),
   required = false,
-}: DatePickerFormProps) {
+}: DatePickerFormProps<T>) {
+  const ref = useRef<HTMLDivElement>(null);
   return (
     <FormField
       control={form.control}
-      name={name}
+      name={name as never}
       render={({ field }) => (
-        <FormItem className="flex flex-col">
+        <FormItem className="flex flex-col" ref={ref}>
           <FormLabel>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -55,7 +49,7 @@ export default function DatePickerForm({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0" align="start" containerRef={ref}>
               <Calendar
                 mode="single"
                 selected={field.value}

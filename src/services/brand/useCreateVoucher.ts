@@ -1,10 +1,9 @@
-import { CreateVoucherForm } from "@/app/brand/_components/CreateVoucherInner";
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import brandHttpClient from "./httpClient";
 
 type CreateVoucherRequest = {
-  vouchers: CreateVoucherForm[];
+  vouchers: any;
 };
 
 async function createVoucher({ vouchers }: CreateVoucherRequest) {

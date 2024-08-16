@@ -1,7 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 
 import DatePickerForm from "@/components/global/DatePickerForm";
-import LabelledInput from "@/components/global/LabelledInput";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   FormControl,
@@ -16,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Event } from "@/services/types";
 
 import Timepicker from "./Timepicker";
-import { BasicEventInfoForm } from "@/services/brand/formSchemas";
+import { EventFormData } from "@/services/brand/formSchemas";
 
 type Game = {
   id: Event["games"][number];
@@ -34,18 +33,18 @@ const games: Game[] = [
   },
 ];
 
-export default function BasicEventInfoInner({ form }: { form: UseFormReturn<BasicEventInfoForm> }) {
-  const disableGameTime = !form.watch("games").includes("trivia");
+export default function BasicEventInfoInner({ form }: { form: UseFormReturn<EventFormData> }) {
+  const disableGameTime = !form.getValues("games").includes("trivia");
 
   return (
     <div className="grid grid-cols-2 gap-20">
       <div className="flex flex-col gap-3">
         <FormField
           control={form.control}
-          name="name"
+          name="event.name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Tên sự kiện</FormLabel>
+              <FormLabel>Event name</FormLabel>
               <FormControl>
                 <Input required placeholder="2 cùng Highland" {...field} />
               </FormControl>
@@ -53,11 +52,14 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Basi
             </FormItem>
           )}
         />
-        <DatePickerForm form={form} name="start_date" label="Ngày bắt đầu sự kiện" required />
-        <DatePickerForm form={form} name="end_date" label="Ngày kết thúc sự kiện" required />
+        <DatePickerForm form={form} name="event.start_date" label="Ngày bắt đầu sự kiện" required />
+        <DatePickerForm form={form} name="event.end_date" label="Ngày kết thúc sự kiện" required />
       </div>
       <div className="flex flex-col gap-3">
-        <LabelledInput label="Thumbnail sự kiện" type="file" />
+        <div>
+          <Label className="mb-1.5">Event Image</Label>
+          <Input type="file" {...form.register("event.image")} required />
+        </div>
         <FormField
           control={form.control}
           name="games"

@@ -1,50 +1,36 @@
-import { format } from "date-fns";
-import { vi } from "date-fns/locale";
-import { CalendarIcon, CheckIcon, ChevronsUpDown, Gift, SortAsc, TrashIcon } from "lucide-react";
+"use client";
+
+import { TrashIcon } from "lucide-react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { ItemSelect, Voucher } from "@/services/types";
 
 import CreateVoucherItemInput from "./CreateVoucherItemInput";
+import { EventFormData } from "@/services/brand/formSchemas";
+import { Select } from "@/components/global/Select";
+import mockVouchers from "@/services/mocks/mockVouchers";
+import { useMemo } from "react";
 
-export type CreateVoucherForm = {
-  vouchers: ({
-    code: string;
-    is_qr: boolean;
-    expired_date: Date;
-    quantity: number;
-    items: {
-      item_id: string;
-      item_quantity: number;
-    }[];
-  } & Pick<Voucher, "description">)[];
-};
-
-export default function CreateVoucherInner({ form }: { form: UseFormReturn<CreateVoucherForm> }) {
+export default function CreateVoucherInner({ form }: { form: UseFormReturn<EventFormData> }) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "vouchers",
+    name: "listVoucher_Items",
   });
 
   const tommorow = new Date();
   tommorow.setDate(tommorow.getDate() + 1);
+
+  const vouchersSelectData = useMemo(() => {
+    return mockVouchers.map((voucher) => ({
+      value: voucher.id,
+      label: voucher.voucherCode,
+    })) as [{ value: string; label: string }];
+  }, []);
+
+  const handleVoucherChange = (voucherId: string, index: number) => {
+    form.setValue(`listVoucher_Items.${index}.voucherId`, voucherId);
+  };
 
   return (
     <div>
@@ -52,88 +38,38 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
         type="button"
         onClick={() =>
           append({
-            code: "",
-            is_qr: false,
-            description: "",
-            expired_date: tommorow,
-            quantity: 0,
-            items: [
-              {
-                item_id: "",
-                item_quantity: 0,
-              },
-            ],
+            voucherId: "1",
+            quantityOfVoucher: 50,
+            itemIds_quantities: [],
           })
         }
         className="mb-2"
       >
-        Thêm voucher
+        Add
       </Button>
-      <div className="flex items-start gap-4 font-medium">
-        <p className="basis-8">STT</p>
-        <p className="basis-28">Voucher QR?</p>
-        <p className="basis-1/6">Mã voucher</p>
-        <p className="basis-1/6">Ngày hết hạn</p>
-        <p className="basis-1/4">Mô tả</p>
-        <p className="basis-1/6">Hình voucher</p>
-        <p className="basis-1/12">Xoá</p>
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex items-start gap-4 font-medium">
+          <p className="basis-8">#</p>
+          <p className="basis-2/3">Voucher</p>
+          <p className="basis-1/6">Quantity</p>
+          <p className="basis-1/6">Delete</p>
+        </div>
+        <div>Voucher - Item Exchange</div>
       </div>
       {fields.map((field, index) => (
-        <div key={field.id}>
+        <div key={field.id} className="mb-3 grid grid-cols-2 gap-3 border-b border-b-gray-200 pb-3">
           <div className="flex items-start gap-4">
             <p className="mt-2 basis-8 text-base font-medium">{index + 1}.</p>
-            <div className="mt-3 flex basis-28 items-center gap-1.5">
-              <Checkbox {...form.register(`vouchers.${index}.is_qr`)} />
-            </div>
+            <Select
+              className="basis-2/3"
+              data={vouchersSelectData}
+              onChange={(v) => handleVoucherChange(v, index)}
+            />
             <Input
-              placeholder="Mã voucher"
-              {...form.register(`vouchers.${index}.code`)}
+              {...form.register(`listVoucher_Items.${index}.quantityOfVoucher`)}
               className="basis-1/6"
             />
-            <FormField
-              control={form.control}
-              name={`vouchers.${index}.expired_date`}
-              render={({ field }) => (
-                <FormItem className="flex shrink basis-1/6 flex-col">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "overflow-clip pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PP", { locale: vi })
-                          ) : (
-                            <span>Ngày hết hạn</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date < new Date()}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormItem>
-              )}
-            />
-            <Textarea
-              {...form.register(`vouchers.${index}.description`)}
-              className="basis-1/4"
-              placeholder="Hoàn 30% tối đa 150k cho đơn từ 0đ"
-            />
-            <Input placeholder="Hình ảnh voucher" type="file" className="basis-1/6" />
-            <div className="basis-1/12">
+            <div className="basis-1/6">
               <Button
                 variant="destructive"
                 size="icon"
@@ -145,15 +81,8 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Creat
             </div>
           </div>
           <CreateVoucherItemInput form={form} voucherIndex={index} />
-          <Separator className="my-2" />
         </div>
       ))}
-      <p className="mb-2 text-xl font-bold">Vật phẩm</p>
-      <div className="flex items-start gap-4 font-medium">
-        <p className="basis-1/12">STT</p>
-        <p className="basis-1/5">Tên vật phẩm</p>
-        <p className="basis-1/6 text-wrap">Số lượng quy đổi</p>
-      </div>
     </div>
   );
 }

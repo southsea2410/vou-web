@@ -11,11 +11,14 @@ export type Event = {
 export type Voucher = {
   id: string;
   brand_id: string;
-  voucher_code?: string;
-  qr_code?: string;
+  voucherCode: string;
+  qrCode: string;
+  image: string;
+  value: number;
   description: string;
-  expired_date: string;
-  status: "active" | "inactive";
+  expiredDate: string;
+  status: number;
+  unitValue: (typeof VoucherUnitValue)[number];
 };
 
 export type VoucherNoId = Omit<Voucher, "id" | "brand_id">;
@@ -30,8 +33,4 @@ export type Item = {
 
 export type ItemSelect = Pick<Item, "id" | "name">;
 
-enum VoucherUnitValue {
-  PERCENT,
-  MINUS,
-  MINUS_PERCENT,
-}
+export const VoucherUnitValue = ["PERCENT", "MINUS", "MINUS_PERCENT"] as const;

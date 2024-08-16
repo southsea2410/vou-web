@@ -15,13 +15,13 @@ import TablePagination from "./Pagination";
 import "./index.css";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Filter } from "./Filter";
+import { Filter, SelectFilter } from "./Filter";
 
 type ReactTableProps<T> = {
   data: T[];
   columns: ColumnDef<T>[];
-  filterOptions?: { [key: string]: (string | number | undefined)[] };
-  globalSearch: string | undefined;
+  filterOptions?: { [key: string]: string[] };
+  globalSearch?: string;
 };
 
 function TableHeadPopover<T>({ column }: { column: Column<T> }) {
@@ -66,7 +66,7 @@ function TableHeadPopover<T>({ column }: { column: Column<T> }) {
 
 type TableHeadProps<T> = {
   table: Table<T>;
-  filterOptions?: { [key: string]: (string | number | undefined)[] };
+  filterOptions?: { [key: string]: string[] };
 };
 
 function TableHead<T>({ table, filterOptions }: TableHeadProps<T>) {
@@ -105,11 +105,17 @@ function TableHead<T>({ table, filterOptions }: TableHeadProps<T>) {
                       desc: " \u25BE",
                     }[header.column.getIsSorted() as string] ?? null}
                   </div>
-                  {header.column.getCanFilter() && (
-                    <div>
-                      <Filter column={header.column} />
-                    </div>
-                  )}
+                  {header.column.getCanFilter() &&
+                    (!!filterOptions?.[header.id] ? (
+                      <div>
+                        <SelectFilter column={header.column} options={filterOptions[header.id]} />
+                      </div>
+                    ) : (
+                      <div>
+                        <Filter column={header.column} />
+                      </div>
+                    ))}
+
                   <TableHeadPopover column={header.column} />
 
                   <div

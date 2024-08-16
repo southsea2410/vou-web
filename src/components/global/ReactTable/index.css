@@ -1,5 +1,5 @@
 .resizer {
-  @apply hover:bg-GRAY-07 bg-transparent;
+  @apply bg-transparent hover:bg-gray-700;
   position: absolute;
   top: 0;
   height: 100%;
@@ -11,7 +11,7 @@
 }
 
 .resizer.isResizing {
-  @apply bg-Blue-40;
+  @apply bg-blue-500;
   opacity: 1;
 }
 
@@ -27,22 +27,22 @@ thead {
 
 table,
 th {
-  @apply border-GRAY-03 border;
+  @apply border border-gray-300;
 }
 
 th {
-  @apply text-GRAY-06 relative select-none font-bold;
+  @apply relative select-none font-bold text-gray-600;
   font-size: 14px;
   line-height: 20px;
 }
 
 tbody tr:hover {
-  @apply bg-GRAY-02;
+  @apply bg-gray-200;
 }
 
 th,
 td {
-  @apply border-t-GRAY-03 border-b-GRAY-03 overflow-hidden text-ellipsis whitespace-nowrap border-b border-t;
+  @apply overflow-hidden text-ellipsis whitespace-nowrap border-b border-t border-b-gray-300 border-t-gray-300;
 }
 
 td {

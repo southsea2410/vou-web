@@ -1,26 +1,14 @@
-import { CheckIcon, ChevronsUpDown, Plus, Trash } from "lucide-react";
+import { Plus, Trash } from "lucide-react";
 import { useFieldArray, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import useGetItems from "@/services/brand/useGetItems";
-import { useQuery } from "@tanstack/react-query";
-
-import { CreateVoucherForm } from "./CreateVoucherInner";
+import { EventFormData } from "@/services/brand/formSchemas";
+import { Select } from "@/components/global/Select";
 
 type CreateVoucherItemInputProps = {
-  form: UseFormReturn<CreateVoucherForm>;
+  form: UseFormReturn<EventFormData>;
   voucherIndex: number;
 };
 
@@ -30,100 +18,61 @@ export default function CreateVoucherItemInput({
 }: CreateVoucherItemInputProps) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: `vouchers.${voucherIndex}.items`,
+    name: `listVoucher_Items.${voucherIndex}.itemIds_quantities`,
   });
 
   const { data: items } = useGetItems("items");
 
+  const handleItemChange = (itemId: string, index: number) => {
+    form.setValue(`listVoucher_Items.${voucherIndex}.itemIds_quantities.${index}.itemId`, itemId);
+  };
+
+  const itemSelectData = items?.map((item) => ({
+    value: item.id,
+    label: item.name,
+  })) as [{ value: string; label: string }];
+
   return (
     <div>
+      <Button
+        className="mb-1"
+        size="icon"
+        type="button"
+        onClick={() => append({ itemId: "", quantity: 0 })}
+      >
+        <Plus />
+      </Button>
       {fields.map((field, index) => {
-        console.log(field, index);
         return (
-          <div key={field.id} className="flex gap-2">
-            <div className="grow" />
-            <FormField
-              control={form.control}
-              name={`vouchers.${voucherIndex}.items.${index}.item_id`}
-              render={({ field }) => {
-                console.log(`vouchers.${voucherIndex}.items.${index}.item_id`, field.value);
-                return (
-                  <FormItem className="flex flex-col">
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={cn(
-                              "w-[200px] justify-between",
-                              !field.value && "text-muted-foreground",
-                            )}
-                          >
-                            {field.value
-                              ? items?.find((i) => i.id === field.value)?.name
-                              : "Chọn vật phẩm"}
-                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Tìm kiếm..." className="h-9" />
-                          <CommandList>
-                            <CommandEmpty>No framework found.</CommandEmpty>
-                            <CommandGroup>
-                              {items?.map((i) => (
-                                <CommandItem
-                                  value={i.name}
-                                  key={i.id}
-                                  onSelect={() => {
-                                    form.setValue(
-                                      `vouchers.${voucherIndex}.items.${index}.item_id`,
-                                      i.id,
-                                    );
-                                    console.log("selected", i);
-                                  }}
-                                >
-                                  {i.name}
-                                  <CheckIcon
-                                    className={cn(
-                                      "ml-auto h-4 w-4",
-                                      i.name === field.value ? "opacity-100" : "opacity-0",
-                                    )}
-                                  />
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </FormItem>
-                );
-              }}
-            />
+          <div key={field.id} className="mb-1.5 flex gap-2">
+            {!!itemSelectData && (
+              <Select
+                className="basis-2/3"
+                placeholder="Select item"
+                onChange={(itemId) => handleItemChange(itemId, index)}
+                data={itemSelectData}
+              />
+            )}
             <Input
-              className="w-20"
-              {...form.register(`vouchers.${voucherIndex}.items.${index}.item_quantity`)}
+              className="basis-1/6"
+              type="number"
+              min={0}
+              {...form.register(
+                `listVoucher_Items.${voucherIndex}.itemIds_quantities.${index}.quantity`,
+              )}
               placeholder="100"
             />
-            <Button
-              size="icon"
-              type="button"
-              variant="destructive"
-              onClick={() => remove(index)}
-              className="aspect-square"
-            >
-              <Trash />
-            </Button>
-            <Button
-              size="icon"
-              type="button"
-              onClick={() => append({ item_id: "", item_quantity: 0 })}
-            >
-              <Plus />
-            </Button>
+            <div className="basis-1/6">
+              <Button
+                size="icon"
+                type="button"
+                variant="destructive"
+                onClick={() => remove(index)}
+                className="aspect-square"
+              >
+                <Trash />
+              </Button>
+            </div>
           </div>
         );
       })}
