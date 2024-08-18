@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { FieldValue, UseFormReturn } from "react-hook-form";
+import { Path, UseFormReturn } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -11,7 +11,7 @@ import { useRef } from "react";
 
 type DatePickerFormProps<T extends object> = {
   form: UseFormReturn<T>;
-  name: FieldValue<T>;
+  name: Path<T>;
   label?: string;
   placeholder?: string;
   disabledFn?: (date: Date) => boolean;
@@ -26,13 +26,12 @@ export default function DatePickerForm<T extends object>({
   disabledFn = (date) => date < new Date(),
   required = false,
 }: DatePickerFormProps<T>) {
-  const ref = useRef<HTMLDivElement>(null);
   return (
     <FormField
       control={form.control}
-      name={name as never}
+      name={name}
       render={({ field }) => (
-        <FormItem className="flex flex-col" ref={ref}>
+        <FormItem className="flex flex-col">
           <FormLabel>{label}</FormLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -49,7 +48,7 @@ export default function DatePickerForm<T extends object>({
                 </Button>
               </FormControl>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start" containerRef={ref}>
+            <PopoverContent className="p-0" align="start">
               <Calendar
                 mode="single"
                 selected={field.value}

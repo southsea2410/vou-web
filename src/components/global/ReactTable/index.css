@@ -15,37 +15,37 @@
   opacity: 1;
 }
 
-table {
+.react-table-container table {
   @apply table-fixed border-collapse;
   position: relative;
 }
 
-thead {
+.react-table-container thead {
   position: sticky;
   top: 0;
 }
 
-table,
-th {
+.react-table-container table,
+.react-table-container th {
   @apply border border-gray-300;
 }
 
-th {
+.react-table-container th {
   @apply relative select-none font-bold text-gray-600;
   font-size: 14px;
   line-height: 20px;
 }
 
-tbody tr:hover {
+.react-table-container tbody tr:hover {
   @apply bg-gray-200;
 }
 
-th,
-td {
+.react-table-container th,
+.react-table-container td {
   @apply overflow-hidden text-ellipsis whitespace-nowrap border-b border-t border-b-gray-300 border-t-gray-300;
 }
 
-td {
+.react-table-container td {
   @apply px-3 py-4 font-medium;
   font-size: 14px;
   line-height: 20px;

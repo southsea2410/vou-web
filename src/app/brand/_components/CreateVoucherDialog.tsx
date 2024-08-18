@@ -1,3 +1,5 @@
+"use client";
+
 import { useForm } from "react-hook-form";
 
 import LabelledInput from "@/components/global/LabelledInput";
@@ -18,13 +20,39 @@ import { Voucher, VoucherUnitValue } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Select } from "@/components/global/Select";
 import DatePickerForm from "@/components/global/DatePickerForm";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import { useUpload } from "@/hooks/useUpload";
 
-type CreateVoucherFormProps = Omit<Voucher, "id">;
+type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList };
 
 export default function CreateVoucherDialog() {
   const form = useForm<CreateVoucherFormProps>();
 
+  const uploadedImage = form.watch("image");
+
+  const imgUrl = useMemo(() => {
+    if (!!uploadedImage) if (uploadedImage[0]) return URL.createObjectURL(uploadedImage[0]);
+    return null;
+  }, [uploadedImage]);
+
+  const { upload } = useUpload();
+
+  const [disabledSubmit, setDisableSubmit] = useState(false);
+
   const handleSubmit = form.handleSubmit((data) => {
+    form.trigger().then((isValid) => {
+      console.log(isValid);
+      if (!isValid) return;
+      setDisableSubmit(true);
+      upload(data.image[0], handleSubmitForm);
+    });
+  });
+
+  const handleSubmitForm = async (key: string) => {
+    const data = form.getValues();
+    data.image = key as never;
+
     toast({
       title: "You submitted the following values:",
       description: (
@@ -33,7 +61,10 @@ export default function CreateVoucherDialog() {
         </pre>
       ),
     });
-  });
+    setDisableSubmit(false);
+  };
+
+  form.register("unitValue", { required: true });
 
   const unitValueSelect = VoucherUnitValue.map((i) => {
     return { value: i, label: i };
@@ -47,18 +78,29 @@ export default function CreateVoucherDialog() {
       <DialogTrigger asChild>
         <Button>Create Voucher</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[85vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle>Create Item</DialogTitle>
+          <DialogTitle>Create Voucher</DialogTitle>
           <DialogDescription>Create a voucher for later uses in events</DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form className="flex flex-col gap-2">
-            <LabelledInput {...form.register("voucherCode")} label="Voucher Code" />
+          <form className="flex h-full flex-col gap-2">
+            <LabelledInput
+              {...form.register("voucherCode", { required: true })}
+              label="Voucher Code"
+            />
             <LabelledInput {...form.register("qrCode")} label="QR Code" />
+            <LabelledInput
+              {...form.register("image", { required: true })}
+              label="Image"
+              type="file"
+            />
+            <div className="relative aspect-[2/1] w-full">
+              {!!imgUrl && <Image fill src={imgUrl} alt="Voucher image" className="object-cover" />}
+            </div>
             <div>
               <Label className="mb-1.5">Item description</Label>
-              <Textarea {...form.register("description")} />
+              <Textarea {...form.register("description", { required: true })} />
             </div>
             <div>
               <Label className="mb-1.5">Unit value</Label>
@@ -68,15 +110,22 @@ export default function CreateVoucherDialog() {
                 onChange={handleChangeUnitValue}
               />
             </div>
-            <LabelledInput {...form.register("value")} type="number" label="Value" />
+            <LabelledInput
+              {...form.register("value", { required: true })}
+              type="number"
+              label="Value"
+              required
+            />
             <div>
               <Label className="mb-1.5">Expire date</Label>
-              <DatePickerForm form={form} name={"expiredDate"} />
+              <DatePickerForm form={form} name={"expiredDate"} required />
             </div>
           </form>
         </Form>
         <DialogFooter>
-          <Button onClick={handleSubmit}>Save changes</Button>
+          <Button onClick={handleSubmit} disabled={disabledSubmit}>
+            Submit
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
