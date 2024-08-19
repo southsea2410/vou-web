@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { EventFormData } from "@/services/brand/formSchemas";
 import { Event } from "@/services/types";
 
 import Timepicker from "./Timepicker";
-import { EventFormData } from "@/services/brand/formSchemas";
 
 type Game = {
   id: Event["games"][number];
@@ -52,8 +52,8 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Even
             </FormItem>
           )}
         />
-        <DatePickerForm form={form} name="event.start_date" label="Ngày bắt đầu sự kiện" required />
-        <DatePickerForm form={form} name="event.end_date" label="Ngày kết thúc sự kiện" required />
+        <DatePickerForm form={form} name="event.startDate" label="Ngày bắt đầu sự kiện" required />
+        <DatePickerForm form={form} name="event.endDate" label="Ngày kết thúc sự kiện" required />
       </div>
       <div className="flex flex-col gap-3">
         <div>

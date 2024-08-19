@@ -5,16 +5,16 @@ import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
+import { useUpload } from "@/hooks/useUpload";
+import { EventFormData } from "@/services/brand/formSchemas";
+import { CreateEventRequest } from "@/services/brand/useCreateEvent";
 
 import BasicEventInfoInner from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherInner from "../_components/CreateVoucherInner";
 import InviteCoopInner from "../_components/InviteCoopInner";
-import { EventFormData } from "@/services/brand/formSchemas";
-import { Form } from "@/components/ui/form";
-import { CreateEventRequest } from "@/services/brand/useCreateEvent";
-import { useUpload } from "@/hooks/useUpload";
 
 export default function CreateEventPage() {
   const eventForm = useForm<EventFormData>({ defaultValues: { games: [] } });
@@ -44,6 +44,8 @@ export default function CreateEventPage() {
         event: {
           ...formData.event,
           image: image,
+          startDate: formData.event.startDate.toISOString(),
+          endDate: formData.event.endDate.toISOString(),
         },
       };
 
