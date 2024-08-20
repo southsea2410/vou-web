@@ -1,7 +1,7 @@
 "use client";
 
-import { UploadIcon } from "lucide-react";
-import { useState } from "react";
+import { DeleteIcon, Edit2Icon, UploadIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import LabelledInput from "@/components/global/LabelledInput";
@@ -28,11 +28,16 @@ import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
 import ItemFrame from "../_components/ItemFrame";
 import mockItems from "@/services/mocks/mockItems";
+import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import ReactTable from "@/components/global/ReactTable";
+import Image from "next/image";
 
 export type DialogState = {
   open: boolean;
   item?: Item;
 };
+
+const itemColumnHelper = createColumnHelper<Item>();
 
 export default function ItemsPage() {
   const { data: items, isLoading } = useGetItems("abc", {
@@ -41,6 +46,48 @@ export default function ItemsPage() {
 
   const [editDialog, setEditDialog] = useState<DialogState>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState>({ open: false });
+
+  const itemColums = [
+    itemColumnHelper.display({
+      header: "Icon",
+      size: 62,
+      cell(props) {
+        return (
+          <Image
+            src={props.row.original.icon}
+            width={128}
+            height={128}
+            alt={props.row.original.name + " icon"}
+          />
+        );
+      },
+    }),
+    itemColumnHelper.accessor("name", { header: "Name" }),
+    itemColumnHelper.accessor("description", { header: "Description", size: 600 }),
+    itemColumnHelper.display({
+      header: "Actions",
+      cell(props) {
+        return (
+          <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setEditDialog({ open: true, item: props.row.original })}
+            >
+              <Edit2Icon />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setDeleteDialog({ open: true, item: props.row.original })}
+            >
+              <DeleteIcon />
+            </Button>
+          </div>
+        );
+      },
+    }),
+  ] as ColumnDef<Item>[];
 
   // Edit logics
   const editForm = useForm<Item>();
@@ -78,18 +125,10 @@ export default function ItemsPage() {
         </div>
         <Separator className="mb-5" />
         <div className="flex flex-wrap gap-2 py-4">
-          {isLoading ? (
+          {isLoading || !items ? (
             <LoadingBlock />
           ) : (
-            items?.map((item) => (
-              <div key={item.id}>
-                <ItemFrame
-                  item={item}
-                  setDeleteDialog={setDeleteDialog}
-                  setEditDialog={setEditDialog}
-                />
-              </div>
-            ))
+            <ReactTable columns={itemColums} data={items} filterOptions={{}} />
           )}
         </div>
         {/* Edit Item Dialog */}
