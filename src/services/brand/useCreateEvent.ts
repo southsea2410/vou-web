@@ -1,17 +1,14 @@
+import { useMutation, UseMutationOptions } from "@tanstack/react-query";
+
+import { Event } from "../types";
+import brandHttpClient from "./httpClient";
+
 // Full-info Create Event API Schema
 export interface CreateEventRequest {
-  event: Event;
+  event: Event & { games: ("trivia" | "shake")[] };
   listGameId_StartTime: ListGameIdStartTime[];
   listVoucher_Items: ListVoucherItem[];
   brandIds: string[];
-}
-
-interface Event {
-  name: string;
-  image: string;
-  numberOfVoucher: number;
-  startDate: string;
-  endDate: string;
 }
 
 interface ListGameIdStartTime {
@@ -28,4 +25,15 @@ interface ListVoucherItem {
 interface ItemIdsQuantity {
   itemId: string;
   quantity: number;
+}
+
+async function createEvent(eventReq: CreateEventRequest) {
+  const res = await brandHttpClient.post("/events", eventReq);
+  return res.data;
+}
+
+export default function useCreateEvent(
+  opts?: UseMutationOptions<object, Error, CreateEventRequest>,
+) {
+  return useMutation<object, Error, CreateEventRequest>({ ...opts, mutationFn: createEvent });
 }

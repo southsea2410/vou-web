@@ -16,7 +16,7 @@
 }
 
 .react-table-container table {
-  @apply table-fixed border-collapse;
+  @apply h-[85vh] border-collapse overflow-auto;
   position: relative;
 }
 

@@ -13,12 +13,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { EventFormData } from "@/services/brand/formSchemas";
-import { Event } from "@/services/types";
 
 import Timepicker from "./Timepicker";
 
 type Game = {
-  id: Event["games"][number];
+  id: string;
   label: string;
 };
 

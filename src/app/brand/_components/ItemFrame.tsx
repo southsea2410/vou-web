@@ -3,14 +3,12 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { Item } from "@/services/types";
-
-import { DialogState } from "../items/page";
+import { DialogState, Item } from "@/services/types";
 
 type ItemFrameProps = {
   item: Item;
-  setEditDialog: (state: DialogState) => void;
-  setDeleteDialog: (state: DialogState) => void;
+  setEditDialog: (state: DialogState<Item>) => void;
+  setDeleteDialog: (state: DialogState<Item>) => void;
 };
 
 export default function ItemFrame({ item, setEditDialog, setDeleteDialog }: ItemFrameProps) {

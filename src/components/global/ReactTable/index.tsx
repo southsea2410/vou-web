@@ -1,3 +1,12 @@
+"use client";
+
+import "./index.css";
+
+import { EyeOff, Pin, PinOff } from "lucide-react";
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Column,
   ColumnDef,
@@ -10,12 +19,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import * as React from "react";
-import TablePagination from "./Pagination";
-import "./index.css";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 import { Filter, SelectFilter } from "./Filter";
+import TablePagination from "./Pagination";
 
 type ReactTableProps<T> = {
   data: T[];
@@ -35,17 +40,34 @@ function TableHeadPopover<T>({ column }: { column: Column<T> }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="absolute right-1 top-1">⋮</button>
+        <button className="absolute right-1 top-1 h-4 w-4">⋮</button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent align="end" className="w-fit p-0.5">
         <div className="flex flex-col items-start justify-center gap-1.5">
-          <button onClick={togglePinColumn} className="underline">
-            {column.getIsPinned() ? "Unpin column" : "Pin column"}
-          </button>
+          <Button variant="ghost" className="min-w-[140px] justify-start" onClick={togglePinColumn}>
+            {column.getIsPinned() ? (
+              <div className="flex items-center gap-1.5">
+                <PinOff size={20} className="inline" />
+                Unpin column
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <Pin size={20} className="inline" />
+                Pin column
+              </div>
+            )}
+          </Button>
 
-          <button className="underline" onClick={() => column.toggleVisibility()}>
-            Hide column
-          </button>
+          <Button
+            variant="ghost"
+            className="min-w-[140px] justify-start"
+            onClick={() => column.toggleVisibility()}
+          >
+            <div className="flex items-center gap-1.5">
+              <EyeOff size={20} className="inline" />
+              Hide column
+            </div>
+          </Button>
 
           {column.getIsSorted() ? (
             <button

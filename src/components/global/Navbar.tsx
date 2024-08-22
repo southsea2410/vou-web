@@ -38,7 +38,7 @@ export default function Navbar({ logo, title, destinations }: NavbarProps) {
           {destinations.map((d, i) => (
             <BreadcrumbItem key={d.label}>
               {current === i ? (
-                <BreadcrumbPage>{d.label}</BreadcrumbPage>
+                <BreadcrumbPage className="font-bold">{d.label}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
                   <Link href={d.href}>{d.label}</Link>

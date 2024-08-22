@@ -2,12 +2,12 @@
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
+import mockItems from "../mocks/mockItems";
 import { Item } from "../types";
 import brandHttpClient from "./httpClient";
-import mockItems from "../mocks/mockItems";
 
 async function getItems(brand_id: string) {
-  const res = await brandHttpClient.get("/items");
+  const res = await brandHttpClient.get("/items" + brand_id);
   return res.data;
 }
 

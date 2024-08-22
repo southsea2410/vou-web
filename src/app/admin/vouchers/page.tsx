@@ -26,8 +26,7 @@ import useGetVouchers from "@/services/brand/useGetVouchers";
 import { DialogState, Voucher, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
-import BrandNavbar from "../_components/BrandNavbar";
-import CreateVoucherDialog from "../_components/CreateVoucherDialog";
+import AdminNavbar from "../_components/AdminNavbar";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
@@ -106,12 +105,9 @@ export default function VouchersPage() {
 
   return (
     <main>
-      <BrandNavbar />
+      <AdminNavbar />
       <div className="w-104 container overflow-auto py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="mb-2 text-3xl">Vouchers Management</h1>
-          <CreateVoucherDialog />
-        </div>
+        <h1 className="mb-2 text-3xl">Vouchers Management</h1>
         <Separator className="mb-5" />
         <ReactTable
           columns={voucherColumns}

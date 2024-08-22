@@ -1,8 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import Navbar, { Destination } from "@/components/global/Navbar";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 const destinations: Destination[] = [
   {
@@ -33,7 +33,7 @@ export default function BrandNavbar() {
       <Button
         asChild
         size="icon"
-        className="ml-auto rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="ml-auto rounded-full bg-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
       >
         <Link href="/brand/profile">
           <Image

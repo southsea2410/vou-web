@@ -1,12 +1,12 @@
-export type Event = {
+export interface Event {
   id: string;
   name: string;
-  image: string | File;
-  number_of_voucher: number;
-  start_date: string;
-  end_date: string;
-  games: ("trivia" | "shake")[];
-};
+  image: string;
+  numberOfVoucher: number;
+  startDate: string;
+  endDate: string;
+}
+export type EventNoId = Omit<Event, "id">;
 
 export type Voucher = {
   id: string;
@@ -20,9 +20,8 @@ export type Voucher = {
   status: number;
   unitValue: (typeof VoucherUnitValue)[number];
 };
-
 export type VoucherNoId = Omit<Voucher, "id" | "brand_id">;
-export type EventNoId = Omit<Event, "id">;
+export const VoucherUnitValue = ["PERCENT", "MINUS", "MINUS_PERCENT"] as const;
 
 export type Item = {
   id: string;
@@ -33,4 +32,7 @@ export type Item = {
 
 export type ItemSelect = Pick<Item, "id" | "name">;
 
-export const VoucherUnitValue = ["PERCENT", "MINUS", "MINUS_PERCENT"] as const;
+export type DialogState<T> = {
+  open: boolean;
+  item?: T;
+};

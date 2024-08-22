@@ -1,6 +1,6 @@
 "use client";
 
-import { DeleteIcon, Edit2Icon, Trash2, UploadIcon } from "lucide-react";
+import { Edit2Icon, Trash2, UploadIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -27,8 +27,7 @@ import useGetItems from "@/services/brand/useGetItems";
 import { DialogState, Item } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
-import BrandNavbar from "../_components/BrandNavbar";
-import CreateItemDialog from "../_components/CreateItemDialog";
+import AdminNavbar from "../_components/AdminNavbar";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
@@ -108,12 +107,9 @@ export default function ItemsPage() {
 
   return (
     <main className="min-h-screen">
-      <BrandNavbar />
+      <AdminNavbar />
       <div className="container py-4">
-        <div className="flex items-center justify-between">
-          <h1 className="mb-2 text-3xl">Items Management</h1>
-          <CreateItemDialog />
-        </div>
+        <h1 className="mb-2 text-3xl">Items Management</h1>
         <Separator className="mb-5" />
         <div>
           {isLoading || !items ? (
