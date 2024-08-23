@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import { Event } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 // Full-info Create Event API Schema
 export interface CreateEventRequest {
@@ -28,7 +28,7 @@ interface ItemIdsQuantity {
 }
 
 async function createEvent(eventReq: CreateEventRequest) {
-  const res = await brandHttpClient.post("/events", eventReq);
+  const res = await httpClient.post("/events", eventReq);
   return res.data;
 }
 

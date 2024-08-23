@@ -1,10 +1,10 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import { Item } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function createItem(item: Item) {
-  const res = await brandHttpClient.post("/items", item);
+  const res = await httpClient.post("/items", item);
   return res.data;
 }
 

@@ -4,10 +4,10 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import { mockEvents } from "../mocks/mockEvents";
 import { Event } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function getEvents(brand_id: string) {
-  const res = await brandHttpClient.get("/events" + brand_id);
+  const res = await httpClient.get("/events" + brand_id);
   return res.data;
 }
 

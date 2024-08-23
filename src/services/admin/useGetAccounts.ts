@@ -2,21 +2,19 @@
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import mockAccounts from "../mocks/mockAccounts";
-import adminHttpClient from "./httpClient";
-import { Account } from "./types";
+import adminHttpClient from "../httpClient";
+import { GeneralProfileType } from "../types";
 
-async function getAccounts() {
-  const response = await adminHttpClient.get("https://api.example.com/accounts");
+async function getAllUsers() {
+  const response = await adminHttpClient.get("api/v1/users/all-users");
   const data = response.data;
   return data;
 }
 
-export default function useGetAccounts(opts?: UseQueryOptions<Account[]>) {
+export default function useGetAllUsers(opts?: UseQueryOptions<GeneralProfileType[]>) {
   return useQuery({
     ...opts,
-    initialData: mockAccounts,
-    queryKey: ["admin/accounts"],
-    queryFn: getAccounts,
+    queryKey: ["admin_all_accounts"],
+    queryFn: getAllUsers,
   });
 }

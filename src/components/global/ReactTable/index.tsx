@@ -22,10 +22,12 @@ import {
 import { Filter, SelectFilter } from "./Filter";
 import TablePagination from "./Pagination";
 
+type FilterOptions = { [key: string]: (string | boolean)[] };
+
 type ReactTableProps<T> = {
   data: T[];
   columns: ColumnDef<T>[];
-  filterOptions?: { [key: string]: string[] };
+  filterOptions?: FilterOptions;
   globalSearch?: string;
 };
 
@@ -88,7 +90,7 @@ function TableHeadPopover<T>({ column }: { column: Column<T> }) {
 
 type TableHeadProps<T> = {
   table: Table<T>;
-  filterOptions?: { [key: string]: string[] };
+  filterOptions?: FilterOptions;
 };
 
 function TableHead<T>({ table, filterOptions }: TableHeadProps<T>) {

@@ -1,9 +1,9 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function deleteEvent(eventId: string) {
-  const res = await brandHttpClient.delete(`/events/${eventId}`);
+  const res = await httpClient.delete(`/events/${eventId}`);
   return res.data;
 }
 

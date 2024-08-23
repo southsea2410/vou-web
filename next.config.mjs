@@ -10,9 +10,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    swcPlugins: [["glass-js/swc", {}]],
-  },
 };
 
 export default nextConfig;

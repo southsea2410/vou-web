@@ -5,11 +5,13 @@ import MetabaseFrame from "./_components/MetabaseFrame";
 
 export default function AdminHomepage() {
   return (
-    <div className="h-screen p-4 flex flex-col">
+    <div className="flex h-screen flex-col">
       <AdminNavbar />
-      <p className="text-3xl font-bold mb-5">Dashboard</p>
-      <div className="relative flex-1">
-        <MetabaseFrame />
+      <div className="flex-1 p-4">
+        <p className="mb-5 text-2xl font-medium">Analytics dashboard</p>
+        <div className="relative h-full">
+          <MetabaseFrame />
+        </div>
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import { Event } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function updateEvent(newEvent: Event) {
-  const res = await brandHttpClient.patch(`/events/${newEvent.id}`, newEvent);
+  const res = await httpClient.patch(`/events/${newEvent.id}`, newEvent);
   return res.data;
 }
 

@@ -1,10 +1,10 @@
 import { UseQueryOptions, useQuery } from "@tanstack/react-query";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 import { Voucher } from "../types";
 import mockVouchers from "../mocks/mockVouchers";
 
 async function getVouchers() {
-  const res = await brandHttpClient.get("/vouchers");
+  const res = await httpClient.get("/vouchers");
   return res.data;
 }
 

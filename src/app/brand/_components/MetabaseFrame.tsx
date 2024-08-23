@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import useGetMetabaseToken from "@/services/admin/useGetMetabaseToken";
 
@@ -11,11 +11,14 @@ export default function MetabaseFrame() {
 
   const [src, setSrc] = useState<string | undefined>(undefined);
 
-  const metabase_url = (token: string) =>
-    METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true";
+  const metabase_url = useCallback(
+    (token: string) =>
+      METABASE_SITE_URL + "/embed/dashboard/" + token + "#bordered=true&titled=true",
+    [METABASE_SITE_URL],
+  );
 
   useEffect(() => {
-    console.log("token", token);
+    console.log("Metabase token", token);
     if (isSuccess) setSrc(metabase_url(token.value));
   }, [token, isSuccess, setSrc, metabase_url]);
 

@@ -1,10 +1,10 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
 import { Voucher } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function updateVoucher(newVoucher: Voucher) {
-  const res = await brandHttpClient.patch(`/events/${newVoucher.id}`, newVoucher);
+  const res = await httpClient.patch(`/events/${newVoucher.id}`, newVoucher);
   return res.data;
 }
 

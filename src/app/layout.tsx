@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import GlassProvider from "glass-js";
 import { Inter } from "next/font/google";
 
 import { Toaster } from "@/components/ui/toaster";
@@ -22,10 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GlassProvider>
-          <AppProviders>{children}</AppProviders>
-          <Toaster />
-        </GlassProvider>
+        <AppProviders>{children}</AppProviders>
+        <Toaster />
       </body>
     </html>
   );

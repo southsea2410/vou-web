@@ -4,10 +4,10 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 import mockItems from "../mocks/mockItems";
 import { Item } from "../types";
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function getItems(brand_id: string) {
-  const res = await brandHttpClient.get("/items" + brand_id);
+  const res = await httpClient.get("/items" + brand_id);
   return res.data;
 }
 

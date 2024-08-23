@@ -2,15 +2,23 @@
 
 import ReactTable from "@/components/global/ReactTable";
 import { Separator } from "@/components/ui/separator";
-import { Account, AccountRoles } from "@/services/admin/types";
-import useGetAccounts from "@/services/admin/useGetAccounts";
+import useGetAllUsers from "@/services/admin/useGetAccounts";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import AdminNavbar from "../_components/AdminNavbar";
+import { AccountRoles, GeneralProfileType } from "@/services/types";
+import LoadingBlock from "@/components/global/LoadingBlock";
 
-const accountColumnHelper = createColumnHelper<Account>();
+const accountColumnHelper = createColumnHelper<GeneralProfileType>();
 
 const accountColumns = [
+  accountColumnHelper.accessor("accountId", {
+    header: "Account ID",
+    size: 120,
+  }),
+  accountColumnHelper.accessor("fullName", {
+    header: "Full Name",
+  }),
   accountColumnHelper.accessor("username", {
     header: "Username",
   }),
@@ -28,10 +36,17 @@ const accountColumns = [
   accountColumnHelper.accessor("phone", {
     header: "Phone",
   }),
-] as ColumnDef<Account>[];
+  accountColumnHelper.accessor("status", {
+    header: "Status",
+    cell(props) {
+      const status = props.getValue();
+      return <span>{status ? "Active" : "Inactive"}</span>;
+    },
+  }),
+] as ColumnDef<GeneralProfileType>[];
 
 export default function AdminAccountPage() {
-  const { data: accounts } = useGetAccounts();
+  const { data: accounts } = useGetAllUsers();
 
   return (
     <div className="min-h-screen">
@@ -40,13 +55,17 @@ export default function AdminAccountPage() {
         <h1 className="mb-2 text-3xl">Events Management</h1>
         <Separator className="mb-5" />
         <div>
-          <ReactTable
-            columns={accountColumns}
-            data={accounts}
-            filterOptions={{
-              role: Array.from(AccountRoles),
-            }}
-          />
+          {!accounts ? (
+            <LoadingBlock />
+          ) : (
+            <ReactTable
+              columns={accountColumns}
+              data={accounts}
+              filterOptions={{
+                role: Array.from(AccountRoles),
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

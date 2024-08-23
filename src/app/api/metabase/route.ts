@@ -7,7 +7,7 @@ export async function GET(request: Request) {
 
   if (METABASE_SECRET_KEY) {
     const payload = {
-      resource: { dashboard: 1 },
+      resource: { dashboard: 2 },
       params: {},
       exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minute expiration
     };

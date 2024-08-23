@@ -1,9 +1,9 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import brandHttpClient from "./httpClient";
+import httpClient from "../httpClient";
 
 async function deleteVoucher(id: string) {
-  const res = await brandHttpClient.delete(`/items/${id}`);
+  const res = await httpClient.delete(`/items/${id}`);
   return res.data;
 }
 

@@ -1,16 +1,20 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import brandHttpClient from "./httpClient";
+import httpClient, { BasicResponse } from "../httpClient";
+import { BrandType } from "../types";
 
-async function getProfile() {
-  const res = await brandHttpClient.get("/profile");
+async function getProfile(userId: string) {
+  const res = await httpClient.get("api/v1/users/all-users/" + userId);
   return res.data;
 }
 
-export default function useGetProfile(opts?: UseQueryOptions<object>) {
-  return useQuery<object>({
-    queryKey: ["profile"],
-    queryFn: getProfile,
+export default function useGetProfile(
+  userId: string,
+  opts?: Omit<UseQueryOptions<BasicResponse<BrandType>>, "queryKey" | "queryFn">,
+) {
+  return useQuery<BasicResponse<BrandType>>({
+    queryKey: ["profile_" + userId],
+    queryFn: () => getProfile(userId),
     ...opts,
   });
 }

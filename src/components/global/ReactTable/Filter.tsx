@@ -34,7 +34,7 @@ export function Filter<T>({ column }: FilterProps<T>) {
 
 type SelectFilterProps<T> = {
   column: Column<T, unknown>;
-  options: string[];
+  options: (string | boolean)[];
 };
 
 export function SelectFilter<T>({ column, options }: SelectFilterProps<T>) {
@@ -50,11 +50,20 @@ export function SelectFilter<T>({ column, options }: SelectFilterProps<T>) {
       </MultiSelectorTrigger>
       <MultiSelectorContent>
         <MultiSelectorList>
-          {options.map((value) => (
-            <MultiSelectorItem key={value} value={value}>
-              {value}
-            </MultiSelectorItem>
-          ))}
+          {options.map((value) => {
+            if (typeof value === "boolean") {
+              return (
+                <MultiSelectorItem key={value ? "true" : "false"} value={value as never}>
+                  {value ? "true" : "false"}
+                </MultiSelectorItem>
+              );
+            }
+            return (
+              <MultiSelectorItem key={value as never} value={value as never}>
+                {value}
+              </MultiSelectorItem>
+            );
+          })}
         </MultiSelectorList>
       </MultiSelectorContent>
     </MultiSelector>
