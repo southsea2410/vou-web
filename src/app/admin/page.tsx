@@ -16,8 +16,3 @@ export default function AdminHomepage() {
     </div>
   );
 }
-
-export const metadata: Metadata = {
-  title: "VOU Administator Portal",
-  description: "Administator portal for VOU",
-};

@@ -18,6 +18,7 @@ type SelectFormProps = {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
+  defaultValue?: string;
 };
 
 export function Select({
@@ -25,10 +26,11 @@ export function Select({
   onChange,
   placeholder = "Select an option",
   className,
+  defaultValue,
 }: SelectFormProps) {
   return (
     <div className={className}>
-      <RadixSelect onValueChange={onChange}>
+      <RadixSelect onValueChange={onChange} defaultValue={defaultValue}>
         <SelectTrigger>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
