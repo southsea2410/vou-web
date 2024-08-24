@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut } from "lucide-react";
+import { LogOut, User2 } from "lucide-react";
 import Image from "next/image";
 
 import Navbar, { Destination } from "@/components/global/Navbar";
@@ -9,6 +9,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/providers/ClientAuthProvider";
 import { toast } from "@/components/ui/use-toast";
+import Link from "next/link";
 
 const destinations: Destination[] = [
   {
@@ -16,12 +17,16 @@ const destinations: Destination[] = [
     label: "General",
   },
   {
-    href: "/admin/events",
-    label: "Events",
-  },
-  {
     href: "/admin/accounts",
     label: "Accounts",
+  },
+  {
+    href: "/admin/games",
+    label: "Games",
+  },
+  {
+    href: "/admin/events",
+    label: "Events",
   },
   {
     href: "/admin/items",
@@ -65,6 +70,12 @@ export default function AdminNavbar() {
           <Command>
             <CommandList>
               <CommandGroup>
+                <CommandItem className="hover:cursor-pointer" asChild>
+                  <Link href="/admin/profile">
+                    <User2 className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </Link>
+                </CommandItem>
                 <CommandItem onSelect={handleSignout} className="hover:cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Sign out</span>

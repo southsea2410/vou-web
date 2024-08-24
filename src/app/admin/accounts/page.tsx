@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { MultiSelector } from "@/components/global/Multiselect";
 import { Select, SelectOptionType } from "@/components/global/Select";
 import { Label } from "@/components/ui/label";
-import useUpdateBrandProfile from "@/services/identity/useUpdateProfile";
+import useUpdateBrandProfile from "@/services/identity/useUpdateBrandProfile";
 import { toast } from "@/components/ui/use-toast";
 import { Edit2, Settings } from "lucide-react";
 

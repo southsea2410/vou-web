@@ -65,3 +65,14 @@ export type BrandType = {
   latitude: number;
   longitude: number;
 };
+
+export type Game = {
+  name: string;
+  type: GameType;
+  instruction: string;
+  image: string;
+  itemSwappable: boolean;
+};
+
+export const GameTypes = ["quiz_game", "shaking_game"] as const;
+export type GameType = (typeof GameTypes)[number];

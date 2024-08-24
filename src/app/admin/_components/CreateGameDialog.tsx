@@ -16,21 +16,18 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { Voucher, VoucherUnitValue } from "@/services/types";
+import { Game, GameTypes, Voucher, VoucherUnitValue } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Select } from "@/components/global/Select";
-import DatePickerForm from "@/components/global/DatePickerForm";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useUpload } from "@/hooks/useUpload";
-import useCreateVoucher from "@/services/brand/useCreateVoucher";
-import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
-import { useAuth } from "@/providers/ClientAuthProvider";
+import useCreateGame from "@/services/admin/useCreateGame";
 
-type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList; brand: any };
+type CreateGameFormProps = Omit<Game, "id" | "image"> & { image: FileList };
 
-export default function CreateVoucherDialog() {
-  const form = useForm<CreateVoucherFormProps>();
+export default function CreateGameDialog() {
+  const form = useForm<CreateGameFormProps>();
 
   const uploadedImage = form.watch("image");
 
@@ -43,10 +40,10 @@ export default function CreateVoucherDialog() {
 
   const [disabledSubmit, setDisableSubmit] = useState(false);
 
-  const { mutate: createVoucher } = useCreateVoucher({
+  const { mutate: createGame } = useCreateGame({
     onSuccess(data) {
       toast({
-        title: "Voucher created successfully",
+        title: "Game created successfully",
         description: (
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
@@ -55,7 +52,7 @@ export default function CreateVoucherDialog() {
       });
     },
     onError(err) {
-      toast({ title: "Failed to create voucher", description: err.message });
+      toast({ title: "Failed to create game", description: err.message });
     },
   });
 
@@ -68,50 +65,37 @@ export default function CreateVoucherDialog() {
     });
   });
 
-  const { accountId } = useAuth();
-
-  const { data: brandInfo, isSuccess: isBrandInfoSuccess } = useGetProfileByAccountId(accountId, {
-    enabled: !!accountId,
-  });
-
   const handleSubmitForm = async (key: string) => {
     const data = form.getValues();
-    const voucher = {
+    const game = {
       ...data,
       image: key,
-      brand: brandInfo,
     };
 
     setDisableSubmit(false);
-    createVoucher(voucher);
+    createGame(game);
   };
 
-  form.register("unitValue", { required: true });
-
-  const unitValueSelect = VoucherUnitValue.map((i) => {
+  const gameTypeSelct = GameTypes.map((i) => {
     return { value: i, label: i };
   });
 
   const handleChangeUnitValue = (value: string) => {
-    form.setValue("unitValue", value as never);
+    form.setValue("type", value as never);
   };
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create Voucher</Button>
+        <Button>Create Game</Button>
       </DialogTrigger>
       <DialogContent className="max-h-[85vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle>Create Voucher</DialogTitle>
-          <DialogDescription>Create a voucher for later uses in events</DialogDescription>
+          <DialogTitle>Create Game</DialogTitle>
+          <DialogDescription>Create a game mobile players</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="flex h-full flex-col gap-2">
-            <LabelledInput
-              {...form.register("voucherCode", { required: true })}
-              label="Voucher Code"
-            />
-            <LabelledInput {...form.register("qrCode")} label="QR Code" />
+            <LabelledInput {...form.register("name", { required: true })} label="Game name" />
             <LabelledInput
               {...form.register("image", { required: true })}
               label="Image"
@@ -122,25 +106,15 @@ export default function CreateVoucherDialog() {
             </div>
             <div>
               <Label className="mb-1.5">Item description</Label>
-              <Textarea {...form.register("description", { required: true })} />
+              <Textarea {...form.register("instruction", { required: true })} />
             </div>
             <div>
-              <Label className="mb-1.5">Unit value</Label>
+              <Label className="mb-1.5">Game type</Label>
               <Select
-                data={unitValueSelect}
+                data={gameTypeSelct}
                 placeholder="Select..."
                 onChange={handleChangeUnitValue}
               />
-            </div>
-            <LabelledInput
-              {...form.register("value", { required: true })}
-              type="number"
-              label="Value"
-              required
-            />
-            <div>
-              <Label className="mb-1.5">Expire date</Label>
-              <DatePickerForm form={form} name={"expiredDate"} required />
             </div>
           </form>
         </Form>

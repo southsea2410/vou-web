@@ -15,11 +15,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Item } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import Image from "next/image";
+import { useMemo } from "react";
 
-type CreateItemFormProps = Omit<Item, "icon">;
+type CreateItemFormProps = Omit<Item, "icon"> & { icon: FileList; brand: any };
 
 export default function CreateItemDialog() {
   const form = useForm<CreateItemFormProps>();
+
+  const uploadedImage = form.watch("icon");
+
+  const imgUri = useMemo(() => {
+    if (!!uploadedImage) if (uploadedImage[0]) return URL.createObjectURL(uploadedImage[0]);
+    return null;
+  }, [uploadedImage]);
+
   const handleSubmit = form.handleSubmit((data) => {
     toast({
       title: "You submitted the following values:",
@@ -45,6 +55,14 @@ export default function CreateItemDialog() {
             <div>
               <Label className="mb-1.5">Item description</Label>
               <Textarea {...form.register("description")} />
+            </div>
+            <LabelledInput
+              {...form.register("icon", { required: true })}
+              label="Item icon"
+              type="file"
+            />
+            <div className="relative aspect-[2/1] w-full">
+              {!!imgUri && <Image fill src={imgUri} alt="Voucher image" className="object-cover" />}
             </div>
           </form>
         </Form>

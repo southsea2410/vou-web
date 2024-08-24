@@ -1,5 +1,5 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
-import httpClient, { BasicResponse } from "../httpClient";
+import { BasicResponse, noTokenClient } from "../httpClient";
 
 type LoginRequest = {
   username: string;
@@ -11,7 +11,7 @@ type LoginResponse = BasicResponse<{
 }>;
 
 async function sendLoginRequest({ username, password }: LoginRequest) {
-  const data = await httpClient.post("api/v1/identity/auth/token", { username, password });
+  const data = await noTokenClient.post("api/v1/identity/auth/token", { username, password });
   return data.data;
 }
 

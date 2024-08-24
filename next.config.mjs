@@ -8,6 +8,10 @@ const nextConfig = {
         port: "",
         pathname: "/public",
       },
+      {
+        protocol: "https",
+        hostname: "vouawsbucket.s3.ap-southeast-1.amazonaws.com",
+      },
     ],
   },
 };
