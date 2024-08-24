@@ -2,7 +2,7 @@
 
 import { DeleteIcon, Edit2Icon, Trash2, UploadIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import LabelledInput from "@/components/global/LabelledInput";
@@ -30,11 +30,19 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
 import S3Image from "@/components/global/S3Image";
+import { useAuth } from "@/providers/ClientAuthProvider";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
 export default function ItemsPage() {
   const { data: items, isLoading } = useGetAllItems();
+
+  const { accountId } = useAuth();
+
+  const filteredItems = useMemo(
+    () => items?.filter((v) => (v as any).brand?.accountId === accountId),
+    [items, accountId],
+  );
 
   const [editDialog, setEditDialog] = useState<DialogState<Item>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Item>>({ open: false });
@@ -117,10 +125,10 @@ export default function ItemsPage() {
         </div>
         <Separator className="mb-5" />
         <div>
-          {isLoading || !items ? (
+          {isLoading || !filteredItems ? (
             <LoadingBlock />
           ) : (
-            <ReactTable columns={itemColums} data={items} filterOptions={{}} />
+            <ReactTable columns={itemColums} data={filteredItems} />
           )}
         </div>
         {/* Edit Item Dialog */}

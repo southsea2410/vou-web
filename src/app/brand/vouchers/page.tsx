@@ -1,7 +1,7 @@
 "use client";
 
 import { Edit2, Trash2, UploadIcon } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import DatePickerForm from "@/components/global/DatePickerForm";
@@ -30,11 +30,20 @@ import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@/providers/ClientAuthProvider";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
 export default function VouchersPage() {
+  const { accountId } = useAuth();
+
   const { data: vouchers } = useGetAllVouchers();
+
+  const filteredVouchers = useMemo(
+    () => vouchers?.filter((v) => (v as any).brand?.accountId === accountId),
+    [vouchers, accountId],
+  );
 
   const [editDialog, setEditDialog] = useState<DialogState<Voucher>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Voucher>>({ open: false });
@@ -114,13 +123,13 @@ export default function VouchersPage() {
           <CreateVoucherDialog />
         </div>
         <Separator className="mb-5" />
-        {vouchers ? (
+        {filteredVouchers ? (
           <ReactTable
             columns={voucherColumns}
             filterOptions={{
               unitValue: Array.from(VoucherUnitValue),
             }}
-            data={vouchers}
+            data={filteredVouchers}
           />
         ) : (
           <LoadingBlock />

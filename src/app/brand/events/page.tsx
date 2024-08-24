@@ -11,6 +11,9 @@ import BrandNavbar from "../_components/BrandNavbar";
 import S3Image from "@/components/global/S3Image";
 import useGetAllEvents from "@/services/admin/useGetAllEvents";
 import LoadingBlock from "@/components/global/LoadingBlock";
+import { useAuth } from "@/providers/ClientAuthProvider";
+import { useMemo } from "react";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 
 const eventColumnHelper = createColumnHelper<Event>();
 
@@ -49,6 +52,17 @@ const eventColumns = [
 export default function Eventspage() {
   const { data: events } = useGetAllEvents();
 
+  const { accountId } = useAuth();
+
+  const { data: brandInfo } = useGetProfileByAccountId(accountId);
+
+  console.log(brandInfo);
+
+  const filteredEvents = useMemo(() => {
+    if (brandInfo) return events?.filter((v) => v.name.includes(brandInfo?.fullName));
+    else return [];
+  }, [events, brandInfo]);
+
   return (
     <div className="min-h-screen">
       <BrandNavbar />
@@ -58,8 +72,8 @@ export default function Eventspage() {
         </div>
         <Separator className="mb-5" />
         <div>
-          {events ? (
-            <ReactTable columns={eventColumns} data={events} filterOptions={{}} />
+          {filteredEvents ? (
+            <ReactTable columns={eventColumns} data={filteredEvents} filterOptions={{}} />
           ) : (
             <LoadingBlock />
           )}

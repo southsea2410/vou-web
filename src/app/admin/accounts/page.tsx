@@ -128,7 +128,7 @@ export default function AdminAccountPage() {
           userId: editDialog.item?.id,
           profile: {
             ...editDialog.item,
-            status: !!status,
+            status: status === "1",
           } as GeneralProfileType & BrandType & { id: string; role: AccountRoleType },
         });
     }

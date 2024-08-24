@@ -69,9 +69,11 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
     if (window) {
       const localToken = localStorage.getItem(TOKEN_KEY);
 
-      setToken(localToken);
+      if (localToken) {
+        setToken(localToken);
 
-      httpClient.defaults.headers.common["Authorization"] = `Bearer ${localToken}`;
+        httpClient.defaults.headers.common["Authorization"] = `Bearer ${localToken}`;
+      }
     }
   }, [setToken, callWarning]);
 
@@ -98,17 +100,7 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
   // Must stay behind all React hooks
   if (auth.isAuthenticated || isPublicRoute)
     return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
-  else
-    return (
-      <main className="h-screen">
-        <div className="mx-auto mt-2 w-fit">
-          <p>Unauthenticated</p>
-          <Button asChild>
-            <Link href="/">Back to Login</Link>
-          </Button>
-        </div>
-      </main>
-    );
+  else return <main className="h-screen"></main>;
 }
 
 export const useAuth = () => {
