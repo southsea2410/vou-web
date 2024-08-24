@@ -8,7 +8,7 @@ import { EventFormData } from "@/services/brand/formSchemas";
 export default function InviteCoopInner({ form }: { form: UseFormReturn<EventFormData> }) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "brandIds",
+    name: "emails",
   });
 
   const handleAdd = () => {
@@ -26,7 +26,7 @@ export default function InviteCoopInner({ form }: { form: UseFormReturn<EventFor
             <Input
               type="email"
               placeholder="otherbrand@gmail.com"
-              {...form.register(`brandIds.${index}.id` as "brandIds.0.id")}
+              {...form.register(`emails.${index}.id` as "emails.0.id")}
               className="w-52"
             />
             <Button

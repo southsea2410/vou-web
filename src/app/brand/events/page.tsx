@@ -4,11 +4,13 @@ import Image from "next/image";
 
 import ReactTable from "@/components/global/ReactTable";
 import { Separator } from "@/components/ui/separator";
-import { mockEvents } from "@/services/mocks/mockEvents";
 import { Event } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import BrandNavbar from "../_components/BrandNavbar";
+import S3Image from "@/components/global/S3Image";
+import useGetAllEvents from "@/services/admin/useGetAllEvents";
+import LoadingBlock from "@/components/global/LoadingBlock";
 
 const eventColumnHelper = createColumnHelper<Event>();
 
@@ -20,8 +22,8 @@ const eventColumns = [
     header: "Image",
     cell(props) {
       return (
-        <img
-          src={props.row.original.image}
+        <S3Image
+          k={props.row.original.image}
           width={300}
           height={150}
           alt={props.row.original.name + " image"}
@@ -44,7 +46,9 @@ const eventColumns = [
   }),
 ] as ColumnDef<Event>[];
 
-export default async function BrandHomepage() {
+export default function Eventspage() {
+  const { data: events } = useGetAllEvents();
+
   return (
     <div className="min-h-screen">
       <BrandNavbar />
@@ -54,7 +58,11 @@ export default async function BrandHomepage() {
         </div>
         <Separator className="mb-5" />
         <div>
-          <ReactTable columns={eventColumns} data={mockEvents} filterOptions={{}} />
+          {events ? (
+            <ReactTable columns={eventColumns} data={events} filterOptions={{}} />
+          ) : (
+            <LoadingBlock />
+          )}
         </div>
       </div>
     </div>

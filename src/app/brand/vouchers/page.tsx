@@ -22,17 +22,19 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteVoucher from "@/services/brand/useDeleteVoucher";
-import useGetVouchers from "@/services/brand/useGetVouchers";
+import useGetAllVouchers from "@/services/admin/useGetAllVouchers";
 import { DialogState, Voucher, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
+import LoadingBlock from "@/components/global/LoadingBlock";
+import { useQueryClient } from "@tanstack/react-query";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
 export default function VouchersPage() {
-  const { data: vouchers } = useGetVouchers();
+  const { data: vouchers } = useGetAllVouchers();
 
   const [editDialog, setEditDialog] = useState<DialogState<Voucher>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Voucher>>({ open: false });
@@ -40,10 +42,6 @@ export default function VouchersPage() {
   const voucherColumns = [
     voucherColumnHelper.accessor("value", {
       header: "Value",
-    }),
-    voucherColumnHelper.accessor("unitValue", {
-      header: "Unit Value",
-      filterFn: "arrIncludesSome",
     }),
     voucherColumnHelper.accessor("description", { header: "Description", minSize: 450 }),
     voucherColumnHelper.accessor("status", {
@@ -81,6 +79,8 @@ export default function VouchersPage() {
   // Edit logics
   const editForm = useForm<Voucher>({ defaultValues: editDialog.item });
 
+  const queryClient = useQueryClient();
+
   // Delete logics
   const { mutate: deleteVoucher } = useDeleteVoucher({
     onSuccess: () => {
@@ -88,6 +88,7 @@ export default function VouchersPage() {
         title: "Voucher deleted",
         description: "Voucher has been deleted successfully",
       });
+      queryClient.invalidateQueries({ queryKey: ["vouchers"] });
     },
     onError: (error) => {
       toast({
@@ -113,13 +114,17 @@ export default function VouchersPage() {
           <CreateVoucherDialog />
         </div>
         <Separator className="mb-5" />
-        <ReactTable
-          columns={voucherColumns}
-          filterOptions={{
-            unitValue: Array.from(VoucherUnitValue),
-          }}
-          data={vouchers}
-        />
+        {vouchers ? (
+          <ReactTable
+            columns={voucherColumns}
+            filterOptions={{
+              unitValue: Array.from(VoucherUnitValue),
+            }}
+            data={vouchers}
+          />
+        ) : (
+          <LoadingBlock />
+        )}
         {/* Edit Voucher Dialog */}
         <Dialog open={editDialog.open} onOpenChange={(s) => !s && setEditDialog({ open: s })}>
           <DialogContent>

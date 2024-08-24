@@ -39,7 +39,10 @@ export default function Timepicker({
   };
 
   useEffect(() => {
-    form.setValue("trivia_time", time.join(":"));
+    form.setValue(
+      "trivia_time",
+      `${time[0].toString().padStart(2, "0")}:${time[1].toString().padStart(2, "0")}:00`,
+    );
   }, [time, form]);
 
   return (

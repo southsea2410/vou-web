@@ -23,17 +23,18 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteItem from "@/services/brand/useDeleteItem";
-import useGetItems from "@/services/brand/useGetItems";
+import useGetAllItems from "@/services/admin/useGetAllItems";
 import { DialogState, Item } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
+import S3Image from "@/components/global/S3Image";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
 export default function ItemsPage() {
-  const { data: items, isLoading } = useGetItems("abc");
+  const { data: items, isLoading } = useGetAllItems();
 
   const [editDialog, setEditDialog] = useState<DialogState<Item>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Item>>({ open: false });
@@ -44,8 +45,8 @@ export default function ItemsPage() {
       size: 62,
       cell(props) {
         return (
-          <Image
-            src={props.row.original.icon}
+          <S3Image
+            k={props.row.original.icon}
             width={128}
             height={128}
             alt={props.row.original.name + " icon"}

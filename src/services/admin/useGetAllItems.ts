@@ -5,17 +5,17 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { Item } from "../types";
 import httpClient from "../httpClient";
 
-async function getItems(brand_id: string) {
-  const res = await httpClient.get("api/v1/events/api/items/brands/" + brand_id);
+async function getItems() {
+  const res = await httpClient.get("api/v1/events/api/items");
   return res.data;
 }
 
 type UseQueryOptionsOmitted<T> = Omit<UseQueryOptions<T>, "queryKey" | "queryFn">;
 
-export default function useGetItems(brand_id: string, opts?: UseQueryOptionsOmitted<Item[]>) {
+export default function useGetAllItems(opts?: UseQueryOptionsOmitted<Item[]>) {
   return useQuery<Item[]>({
     queryKey: ["items"],
-    queryFn: () => getItems(brand_id),
+    queryFn: getItems,
     ...opts,
   });
 }

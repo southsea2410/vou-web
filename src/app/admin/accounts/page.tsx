@@ -21,7 +21,7 @@ import {
   GeneralProfileType,
 } from "@/services/types";
 import LoadingBlock from "@/components/global/LoadingBlock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MultiSelector } from "@/components/global/Multiselect";
 import { Select, SelectOptionType } from "@/components/global/Select";
@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import useUpdateBrandProfile from "@/services/identity/useUpdateBrandProfile";
 import { toast } from "@/components/ui/use-toast";
 import { Edit2, Settings } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const accountColumnHelper = createColumnHelper<GeneralProfileType & { id: string }>();
 
@@ -68,7 +69,7 @@ export default function AdminAccountPage() {
         const status = props.getValue();
         return (
           <div className="flex items-center justify-between">
-            <span>{status ? "Active" : "Inactive"}</span>
+            <span>{status ? "Active" : "Disabled"}</span>
             <Button
               variant="outline"
               size="icon"
@@ -81,9 +82,18 @@ export default function AdminAccountPage() {
       },
     }),
   ] as ColumnDef<GeneralProfileType>[];
+
+  const queryClient = useQueryClient();
+
   const { data: accounts } = useGetAllUsers();
+
   const { mutate: updateProfile } = useUpdateBrandProfile({
     onMutate: () => toast({ title: "Updating Brand...", description: "Updating brand status" }),
+    onSuccess(data, variables, context) {
+      toast({ title: "Success", description: "Brand status updated" });
+      setEditDialog({ open: false });
+      queryClient.invalidateQueries({ queryKey: ["admin_all_accounts"] });
+    },
   });
 
   const [editDialog, setEditDialog] = useState<DialogState<GeneralProfileType & { id: string }>>({
@@ -92,16 +102,19 @@ export default function AdminAccountPage() {
 
   const selectData: SelectOptionType[] = [
     {
-      value: "true",
+      value: "1",
       label: "Active",
     },
     {
-      value: "false",
+      value: "0",
       label: "Disabled",
     },
   ];
 
-  const [status, setStatus] = useState(editDialog.item?.status ? "true" : "false");
+  const [status, setStatus] = useState(editDialog.item?.status ? "1" : "0");
+
+  useEffect(() => setStatus(editDialog.item?.status ? "1" : "0"), [editDialog]);
+
   const handleChangeStatus = (value: string) => {
     setStatus(value);
   };
@@ -115,7 +128,7 @@ export default function AdminAccountPage() {
           userId: editDialog.item?.id,
           profile: {
             ...editDialog.item,
-            status: status === "true" ? true : false,
+            status: !!status,
           } as GeneralProfileType & BrandType & { id: string; role: AccountRoleType },
         });
     }

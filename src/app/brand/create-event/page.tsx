@@ -9,7 +9,7 @@ import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { useUpload } from "@/hooks/useUpload";
 import { EventFormData } from "@/services/brand/formSchemas";
-import { CreateEventRequest } from "@/services/brand/useCreateEvent";
+import useCreateEvent, { CreateEventRequest } from "@/services/brand/useCreateEvent";
 
 import BasicEventInfoInner from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
@@ -19,7 +19,22 @@ import InviteCoopInner from "../_components/InviteCoopInner";
 export default function CreateEventPage() {
   const eventForm = useForm<EventFormData>({ defaultValues: { games: [] } });
 
-  const { uploadProgress, uploadState, upload } = useUpload();
+  const { upload } = useUpload();
+
+  const { mutate: createEvent } = useCreateEvent({
+    onError(err) {
+      toast({
+        title: "Failed to create event",
+        description: err.message,
+        variant: "destructive",
+      });
+    },
+    onSuccess(data) {
+      toast({
+        title: "Event created successfully",
+      });
+    },
+  });
 
   const onSubmit = async (formData: EventFormData) => {
     const listGameId_StartTime: CreateEventRequest["listGameId_StartTime"] = formData.games.map(
@@ -40,21 +55,17 @@ export default function CreateEventPage() {
       const createEventData: CreateEventRequest = {
         listGameId_StartTime,
         listVoucher_Items: formData.listVoucher_Items,
-        brandIds: formData.brandIds.map((i) => i.id),
+        emails: formData.emails.map((i) => i.id),
         event: {
           ...formData.event,
           image: image,
+          numberOfVoucher: 0,
           startDate: formData.event.startDate.toISOString(),
           endDate: formData.event.endDate.toISOString(),
         },
       };
 
-      toast({
-        title: "Event created",
-        description: "The event has been created successfully\n" + JSON.stringify(createEventData),
-      });
-
-      console.log(createEventData);
+      createEvent(createEventData);
     }
   };
   return (

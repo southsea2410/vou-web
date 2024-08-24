@@ -26,10 +26,13 @@ import { useUpload } from "@/hooks/useUpload";
 import useCreateVoucher from "@/services/brand/useCreateVoucher";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 import { useAuth } from "@/providers/ClientAuthProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList; brand: any };
 
 export default function CreateVoucherDialog() {
+  const queryClient = useQueryClient();
+
   const form = useForm<CreateVoucherFormProps>();
 
   const uploadedImage = form.watch("image");
@@ -47,12 +50,9 @@ export default function CreateVoucherDialog() {
     onSuccess(data) {
       toast({
         title: "Voucher created successfully",
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
       });
+
+      queryClient.invalidateQueries({ queryKey: ["vouchers"] });
     },
     onError(err) {
       toast({ title: "Failed to create voucher", description: err.message });

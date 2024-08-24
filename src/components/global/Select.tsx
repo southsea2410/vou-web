@@ -28,6 +28,7 @@ export function Select({
   className,
   defaultValue,
 }: SelectFormProps) {
+  console.log("default value", defaultValue, data);
   return (
     <div className={className}>
       <RadixSelect onValueChange={onChange} defaultValue={defaultValue}>

@@ -9,8 +9,8 @@ import { Input } from "@/components/ui/input";
 import CreateVoucherItemInput from "./CreateVoucherItemInput";
 import { EventFormData } from "@/services/brand/formSchemas";
 import { Select } from "@/components/global/Select";
-import mockVouchers from "@/services/mocks/mockVouchers";
 import { useMemo } from "react";
+import useGetAllVouchers from "@/services/admin/useGetAllVouchers";
 
 export default function CreateVoucherInner({ form }: { form: UseFormReturn<EventFormData> }) {
   const { fields, append, remove } = useFieldArray({
@@ -21,12 +21,15 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Event
   const tommorow = new Date();
   tommorow.setDate(tommorow.getDate() + 1);
 
+  const { data: vouchers } = useGetAllVouchers();
+
   const vouchersSelectData = useMemo(() => {
-    return mockVouchers.map((voucher) => ({
+    if (!vouchers) return [];
+    return vouchers.map((voucher) => ({
       value: voucher.id,
       label: voucher.voucherCode,
     })) as [{ value: string; label: string }];
-  }, []);
+  }, [vouchers]);
 
   const handleVoucherChange = (voucherId: string, index: number) => {
     form.setValue(`listVoucher_Items.${index}.voucherId`, voucherId);

@@ -7,11 +7,8 @@ export default function AdminHomepage() {
   return (
     <div className="flex h-screen flex-col">
       <AdminNavbar />
-      <div className="flex-1 p-4">
-        <p className="mb-5 text-2xl font-medium">Analytics dashboard</p>
-        <div className="relative h-full">
-          <MetabaseFrame dashboardId={3} />
-        </div>
+      <div className="relative mt-10 h-[90vh]">
+        <MetabaseFrame dashboardId={3} />
       </div>
     </div>
   );

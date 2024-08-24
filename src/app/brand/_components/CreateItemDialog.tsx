@@ -16,11 +16,18 @@ import { toast } from "@/components/ui/use-toast";
 import { Item } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import useCreateItem from "@/services/brand/useCreateItem";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import { useAuth } from "@/providers/ClientAuthProvider";
+import { useQueryClient } from "@tanstack/react-query";
+import { useUpload } from "@/hooks/useUpload";
 
 type CreateItemFormProps = Omit<Item, "icon"> & { icon: FileList; brand: any };
 
 export default function CreateItemDialog() {
+  const queryClient = useQueryClient();
+
   const form = useForm<CreateItemFormProps>();
 
   const uploadedImage = form.watch("icon");
@@ -30,16 +37,51 @@ export default function CreateItemDialog() {
     return null;
   }, [uploadedImage]);
 
+  const { upload } = useUpload();
+
+  const [disabledSubmit, setDisableSubmit] = useState(false);
+
+  const { mutate: createItem } = useCreateItem({
+    onSuccess(data) {
+      toast({
+        title: "Item created successfully",
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["items"] });
+    },
+    onError(err) {
+      toast({ title: "Failed to create item", description: err.message });
+    },
+  });
+
   const handleSubmit = form.handleSubmit((data) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    form.trigger().then((isValid) => {
+      if (!isValid) return;
+
+      setDisableSubmit(true);
+
+      upload(data.icon[0], handleSubmitForm);
     });
   });
+
+  const { accountId } = useAuth();
+
+  const { data: brandInfo, isSuccess: isBrandInfoSuccess } = useGetProfileByAccountId(accountId, {
+    enabled: !!accountId,
+  });
+
+  const handleSubmitForm = async (key: string) => {
+    const data = form.getValues();
+    const item = {
+      ...data,
+      icon: key,
+      brand: brandInfo,
+    };
+
+    setDisableSubmit(false);
+    createItem(item);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>

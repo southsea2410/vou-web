@@ -48,7 +48,7 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
     });
 
     if (!isPublicRoute) location.href = "/";
-  }, [router, isPublicRoute]);
+  }, [isPublicRoute]);
 
   // Response interceptor
   useEffect(() => {

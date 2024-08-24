@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import useGetItems from "@/services/brand/useGetItems";
 import { EventFormData } from "@/services/brand/formSchemas";
 import { Select } from "@/components/global/Select";
+import useGetAllItems from "@/services/admin/useGetAllItems";
 
 type CreateVoucherItemInputProps = {
   form: UseFormReturn<EventFormData>;
@@ -21,7 +22,7 @@ export default function CreateVoucherItemInput({
     name: `listVoucher_Items.${voucherIndex}.itemIds_quantities`,
   });
 
-  const { data: items } = useGetItems("items");
+  const { data: items } = useGetAllItems();
 
   const handleItemChange = (itemId: string, index: number) => {
     form.setValue(`listVoucher_Items.${voucherIndex}.itemIds_quantities.${index}.itemId`, itemId);

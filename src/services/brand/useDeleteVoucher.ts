@@ -3,7 +3,7 @@ import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import httpClient from "../httpClient";
 
 async function deleteVoucher(id: string) {
-  const res = await httpClient.delete(`/items/${id}`);
+  const res = await httpClient.delete(`api/v1/events/api/vouchers/${id}`);
   return res.data;
 }
 

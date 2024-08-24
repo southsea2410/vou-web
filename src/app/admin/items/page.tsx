@@ -28,11 +28,13 @@ import { DialogState, Item } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import AdminNavbar from "../_components/AdminNavbar";
+import S3Image from "@/components/global/S3Image";
+import useGetAllItems from "@/services/admin/useGetAllItems";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
 export default function ItemsPage() {
-  const { data: items, isLoading } = useGetItems("abc");
+  const { data: items, isLoading } = useGetAllItems();
 
   const [editDialog, setEditDialog] = useState<DialogState<Item>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Item>>({ open: false });
@@ -43,8 +45,8 @@ export default function ItemsPage() {
       size: 62,
       cell(props) {
         return (
-          <Image
-            src={props.row.original.icon}
+          <S3Image
+            k={props.row.original.icon}
             width={128}
             height={128}
             alt={props.row.original.name + " icon"}
@@ -54,29 +56,6 @@ export default function ItemsPage() {
     }),
     itemColumnHelper.accessor("name", { header: "Name" }),
     itemColumnHelper.accessor("description", { header: "Description", size: 600 }),
-    itemColumnHelper.display({
-      header: "Actions",
-      cell(props) {
-        return (
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setEditDialog({ open: true, item: props.row.original })}
-            >
-              <Edit2Icon />
-            </Button>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => setDeleteDialog({ open: true, item: props.row.original })}
-            >
-              <Trash2 />
-            </Button>
-          </div>
-        );
-      },
-    }),
   ] as ColumnDef<Item>[];
 
   // Edit logics

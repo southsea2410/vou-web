@@ -8,7 +8,7 @@ export interface CreateEventRequest {
   event: Event & { games: ("trivia" | "shake")[] };
   listGameId_StartTime: ListGameIdStartTime[];
   listVoucher_Items: ListVoucherItem[];
-  brandIds: string[];
+  emails: string[];
 }
 
 interface ListGameIdStartTime {
