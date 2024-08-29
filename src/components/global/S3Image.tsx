@@ -11,5 +11,5 @@ export default function S3Image({ k, ...props }: Omit<ImageProps, "src"> & { k: 
     if (url) setSrc(url);
   }, [url]);
 
-  return <Image {...props} alt={props.alt} src={src} />;
+  return <img {...props} alt={props.alt} src={src} />;
 }
