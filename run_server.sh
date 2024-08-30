@@ -1,3 +1,4 @@
-#!/home/nam/.bun/bin/bun
+#!/home/nam/codeproj/vou-web
+PATH=/home/nam/.bun/bin
 
-bun start --port 3001
+cd ~/codeproj/vou-web && bun start --port 3001
