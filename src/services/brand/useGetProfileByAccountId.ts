@@ -15,7 +15,7 @@ export default function useGetProfileByAccountId(
   opts?: Omit<UseQueryOptions<ProfileResponse>, "queryKey" | "queryFn">,
 ) {
   return useQuery<ProfileResponse>({
-    queryKey: ["account_id_profile_" + accountId],
+    queryKey: ["profile", "account_id_" + accountId],
     queryFn: () => getProfileByAccountId(accountId),
     ...opts,
   });

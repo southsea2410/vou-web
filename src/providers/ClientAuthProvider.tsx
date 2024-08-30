@@ -1,11 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import httpClient from "@/services/httpClient";
 import useGetAccountInfo from "@/services/identity/useAccountInfo";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
 type AuthContextType = {
@@ -33,8 +31,6 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
 
   const pathName = usePathname();
   const isPublicRoute = publicRoutes.includes(pathName);
-
-  const router = useRouter();
 
   const [token, setToken] = useState<string | null>(null);
 
