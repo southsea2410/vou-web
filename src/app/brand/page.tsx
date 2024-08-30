@@ -6,7 +6,7 @@ export default function BrandHomepage() {
     <div className="flex min-h-screen flex-col">
       <BrandNavbar />
       <div className="relative mt-10 h-[85vh] p-4">
-        <MetabaseFrame dashboardId={5} />
+        <MetabaseFrame dashboardId={2} />
       </div>
     </div>
   );
