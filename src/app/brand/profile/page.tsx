@@ -19,7 +19,7 @@ export default function BrandProfilePage() {
   const { isAuthenticated } = useAuth();
 
   const { data: account } = useGetMyInfo({ enabled: isAuthenticated });
-  const accountId = account?.result?.id;
+  const accountId = account?.id;
 
   const { data: profileRes, isSuccess: isBrandProfileSuccess } = useGetProfileByAccountId(
     accountId ?? "",

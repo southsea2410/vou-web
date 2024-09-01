@@ -8,7 +8,7 @@ export default function AdminHomepage() {
     <div className="flex h-screen flex-col">
       <AdminNavbar />
       <div className="relative mt-10 h-[90vh]">
-        <MetabaseFrame dashboardId={3} />
+        <MetabaseFrame dashboardId={2} />
       </div>
     </div>
   );

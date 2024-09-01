@@ -21,7 +21,7 @@ export default function AdminProfilePage() {
   const { data: account, isSuccess: isAccountInfoSuccess } = useGetMyInfo({
     enabled: isAuthenticated,
   });
-  const accountId = account?.result?.id;
+  const accountId = account?.id;
 
   const f = useForm<UpdateAdminProfileRequest["profile"]>();
 

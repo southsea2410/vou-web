@@ -24,6 +24,12 @@ type NotificationContextType = {
   subcribe_successful: boolean;
 };
 
+type NotificationType = {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+};
+
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export default function NotificationProvider({ children }: { children: ReactNode }) {
