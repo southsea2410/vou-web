@@ -15,9 +15,16 @@ import BasicEventInfoInner from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherInner from "../_components/CreateVoucherInner";
 import InviteCoopInner from "../_components/InviteCoopInner";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import { useAuth } from "@/providers/ClientAuthProvider";
 
 export default function CreateEventPage() {
   const eventForm = useForm<EventFormData>({ defaultValues: { games: [] } });
+
+  const { accountId } = useAuth();
+
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
 
   const { upload } = useUpload();
 
@@ -55,7 +62,7 @@ export default function CreateEventPage() {
       const createEventData: CreateEventRequest = {
         listGameId_StartTime,
         listVoucher_Items: formData.listVoucher_Items,
-        emails: formData.emails.map((i) => i.id),
+        emails: [profile?.email ?? "", ...formData.emails.map((i) => i.id)],
         event: {
           ...formData.event,
           image: image,

@@ -22,7 +22,6 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteVoucher from "@/services/brand/useDeleteVoucher";
-import useGetAllVouchers from "@/services/admin/useGetAllVouchers";
 import { DialogState, Voucher, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -30,20 +29,15 @@ import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "@/providers/ClientAuthProvider";
-import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
+import useGetVouchers from "@/services/brand/useGetVouchers";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
 export default function VouchersPage() {
-  const { accountId } = useAuth();
+  const { data: profile } = useGetMyInfo();
 
-  const { data: vouchers } = useGetAllVouchers();
-
-  const filteredVouchers = useMemo(
-    () => vouchers?.filter((v) => (v as any).brand?.accountId === accountId),
-    [vouchers, accountId],
-  );
+  const { data: vouchers } = useGetVouchers(profile?.id ?? "", { enabled: !!profile?.id });
 
   const [editDialog, setEditDialog] = useState<DialogState<Voucher>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Voucher>>({ open: false });
@@ -123,13 +117,13 @@ export default function VouchersPage() {
           <CreateVoucherDialog />
         </div>
         <Separator className="mb-5" />
-        {filteredVouchers ? (
+        {vouchers ? (
           <ReactTable
             columns={voucherColumns}
             filterOptions={{
               unitValue: Array.from(VoucherUnitValue),
             }}
-            data={filteredVouchers}
+            data={vouchers}
           />
         ) : (
           <LoadingBlock />

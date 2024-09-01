@@ -1,7 +1,7 @@
 "use client";
 
 import BrandNavbar from "../_components/BrandNavbar";
-import useGetAccountInfo from "@/services/identity/useAccountInfo";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import LabelledInput from "@/components/global/LabelledInput";
@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function BrandProfilePage() {
   const { isAuthenticated } = useAuth();
 
-  const { data: account } = useGetAccountInfo({ enabled: isAuthenticated });
+  const { data: account } = useGetMyInfo({ enabled: isAuthenticated });
   const accountId = account?.result?.id;
 
   const { data: profileRes, isSuccess: isBrandProfileSuccess } = useGetProfileByAccountId(

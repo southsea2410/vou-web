@@ -8,7 +8,7 @@ export type UpdateAdminProfileRequest = {
 };
 
 async function updateAdminProfile({ profile, profileId }: UpdateAdminProfileRequest) {
-  const res = await httpClient.patch("api/v1/users/all-users/" + profileId, profile);
+  const res = await httpClient.patch("users/all-users/" + profileId, profile);
   return res.data;
 }
 

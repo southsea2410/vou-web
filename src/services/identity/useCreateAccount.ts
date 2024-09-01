@@ -1,7 +1,7 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import httpClient, { BasicResponse } from "../httpClient";
 import { AccountRoleType } from "../types";
-import { GetAccountInfoResponse } from "./useAccountInfo";
+import { GetAccountInfoResponse } from "./useGetMyInfo";
 
 export type CreateAccountRequest = {
   username: string;
@@ -10,7 +10,7 @@ export type CreateAccountRequest = {
 };
 
 async function createAccount(account: CreateAccountRequest) {
-  const res = await httpClient.post("api/v1/identity/users/registration", account);
+  const res = await httpClient.post("identity/users/registration", account);
   return res.data;
 }
 

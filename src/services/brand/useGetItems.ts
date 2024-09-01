@@ -6,7 +6,7 @@ import { Item } from "../types";
 import httpClient from "../httpClient";
 
 async function getItems(brand_id: string) {
-  const res = await httpClient.get("api/v1/events/api/items/brands/" + brand_id);
+  const res = await httpClient.get("events/api/items/brands/" + brand_id);
   return res.data;
 }
 
@@ -14,7 +14,7 @@ type UseQueryOptionsOmitted<T> = Omit<UseQueryOptions<T>, "queryKey" | "queryFn"
 
 export default function useGetItems(brand_id: string, opts?: UseQueryOptionsOmitted<Item[]>) {
   return useQuery<Item[]>({
-    queryKey: ["items"],
+    queryKey: ["items", brand_id],
     queryFn: () => getItems(brand_id),
     ...opts,
   });

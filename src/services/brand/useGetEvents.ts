@@ -7,7 +7,7 @@ import { Event } from "../types";
 import httpClient from "../httpClient";
 
 async function getEvents(brand_id: string) {
-  const res = await httpClient.get("/events" + brand_id);
+  const res = await httpClient.get("events/api/events/brands/" + brand_id);
   return res.data;
 }
 

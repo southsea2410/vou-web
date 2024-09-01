@@ -23,7 +23,6 @@ import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteItem from "@/services/brand/useDeleteItem";
-import useGetAllItems from "@/services/admin/useGetAllItems";
 import { DialogState, Item } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
@@ -31,21 +30,22 @@ import BrandNavbar from "../_components/BrandNavbar";
 import CreateItemDialog from "../_components/CreateItemDialog";
 import S3Image from "@/components/global/S3Image";
 import { useAuth } from "@/providers/ClientAuthProvider";
+import useGetItems from "@/services/brand/useGetItems";
+import useGetProfile from "@/services/brand/useGetProfile";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
 export default function ItemsPage() {
-  const { data: items, isLoading } = useGetAllItems();
-
+  // const { data: profile } = useGetMyInfo();
   const { accountId } = useAuth();
-
-  const filteredItems = useMemo(
-    () => items?.filter((v) => (v as any).brand?.accountId === accountId),
-    [items, accountId],
-  );
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
 
   const [editDialog, setEditDialog] = useState<DialogState<Item>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Item>>({ open: false });
+
+  const { data: items, isLoading } = useGetItems(profile?.id ?? "", { enabled: !!profile?.id });
 
   const itemColums = [
     itemColumnHelper.display({
@@ -125,10 +125,10 @@ export default function ItemsPage() {
         </div>
         <Separator className="mb-5" />
         <div>
-          {isLoading || !filteredItems ? (
+          {isLoading || !items ? (
             <LoadingBlock />
           ) : (
-            <ReactTable columns={itemColums} data={filteredItems} />
+            <ReactTable columns={itemColums} data={items} />
           )}
         </div>
         {/* Edit Item Dialog */}

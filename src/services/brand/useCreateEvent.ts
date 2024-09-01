@@ -28,7 +28,8 @@ interface ItemIdsQuantity {
 }
 
 async function createEvent(eventReq: CreateEventRequest) {
-  const res = await httpClient.post("api/v1/events/api/events/create", eventReq);
+  const res = await httpClient.post("events/api/events/create", eventReq);
+  // const res = await httpClient.post("http://localhost:8083/events/api/events/create", eventReq);
   return res.data;
 }
 

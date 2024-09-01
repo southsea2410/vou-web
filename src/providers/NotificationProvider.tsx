@@ -39,7 +39,7 @@ export default function NotificationProvider({ children }: { children: ReactNode
   const { mutate: subscribeNotiToken } = useSubcribeNoti({
     onSuccess: (__, variables, _) => {
       setContext({ token: variables.token, subcribe_successful: true });
-      console.log("[Notification] Subcribe notification successful");
+      console.log("[Notification] Subcribe notification successful, token: ", variables);
     },
     onError: (error) => {
       console.error("[Notification] Error when subcribe notification: ", error);
@@ -48,7 +48,16 @@ export default function NotificationProvider({ children }: { children: ReactNode
 
   useEffect(() => {
     const app = initializeApp(firebaseConfig);
+
     const messaging = getMessaging(app);
+
+    onMessage(messaging, (payload) => {
+      console.log("[Notification] Message received. ", payload);
+      toast({
+        title: payload.data?.title,
+        description: payload.data?.body,
+      });
+    });
 
     getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_NOTIFICATION_VAPID_KEY,
@@ -62,13 +71,6 @@ export default function NotificationProvider({ children }: { children: ReactNode
       }
     });
 
-    onMessage(messaging, (payload) => {
-      console.log("[Notification] Message received. ", payload);
-      toast({
-        title: payload.notification?.title,
-        description: payload.notification?.body,
-      });
-    });
     console.log("[Notification] Firebase messaging initialized, waiting for notifications");
   }, []);
 

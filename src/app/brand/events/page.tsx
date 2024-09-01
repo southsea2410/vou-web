@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import ReactTable from "@/components/global/ReactTable";
 import { Separator } from "@/components/ui/separator";
 import { Event } from "@/services/types";
@@ -9,11 +7,11 @@ import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import BrandNavbar from "../_components/BrandNavbar";
 import S3Image from "@/components/global/S3Image";
-import useGetAllEvents from "@/services/admin/useGetAllEvents";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { useAuth } from "@/providers/ClientAuthProvider";
-import { useMemo } from "react";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import useGetEvents from "@/services/brand/useGetEvents";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
 
 const eventColumnHelper = createColumnHelper<Event>();
 
@@ -50,18 +48,15 @@ const eventColumns = [
 ] as ColumnDef<Event>[];
 
 export default function Eventspage() {
-  const { data: events } = useGetAllEvents();
+  const { data: profile } = useGetMyInfo();
+
+  const { data: events } = useGetEvents(profile?.id ?? "", { enabled: !!profile?.id });
 
   const { accountId } = useAuth();
 
   const { data: brandInfo } = useGetProfileByAccountId(accountId);
 
   console.log(brandInfo);
-
-  const filteredEvents = useMemo(() => {
-    if (brandInfo) return events?.filter((v) => v.name.includes(brandInfo?.fullName));
-    else return [];
-  }, [events, brandInfo]);
 
   return (
     <div className="min-h-screen">
@@ -72,8 +67,8 @@ export default function Eventspage() {
         </div>
         <Separator className="mb-5" />
         <div>
-          {filteredEvents ? (
-            <ReactTable columns={eventColumns} data={filteredEvents} filterOptions={{}} />
+          {events ? (
+            <ReactTable columns={eventColumns} data={events} filterOptions={{}} />
           ) : (
             <LoadingBlock />
           )}

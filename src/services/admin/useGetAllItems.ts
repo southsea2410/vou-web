@@ -6,7 +6,7 @@ import { Item } from "../types";
 import httpClient from "../httpClient";
 
 async function getItems() {
-  const res = await httpClient.get("api/v1/events/api/items");
+  const res = await httpClient.get("events/api/items");
   return res.data;
 }
 

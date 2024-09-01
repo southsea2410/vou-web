@@ -7,12 +7,14 @@ import { TOKEN_KEY, useAuth } from "@/providers/ClientAuthProvider";
 import httpClient from "@/services/httpClient";
 
 import usePostToken from "@/services/identity/usePostToken";
+import { useQueryClient } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { mutate } = usePostToken({
     onError(e, variables, __) {
@@ -34,6 +36,7 @@ export default function LoginPage() {
       const role = (jwt as any).scope?.split("_")[1];
 
       console.log("Logging in as", role);
+      queryClient.invalidateQueries();
       router.replace(`/${role}`);
     },
   });

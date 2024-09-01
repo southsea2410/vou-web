@@ -1,6 +1,6 @@
 "use client";
 
-import useGetAccountInfo from "@/services/identity/useAccountInfo";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import LabelledInput from "@/components/global/LabelledInput";
@@ -18,7 +18,7 @@ import useUpdateAdminProfile, {
 export default function AdminProfilePage() {
   const { isAuthenticated } = useAuth();
 
-  const { data: account, isSuccess: isAccountInfoSuccess } = useGetAccountInfo({
+  const { data: account, isSuccess: isAccountInfoSuccess } = useGetMyInfo({
     enabled: isAuthenticated,
   });
   const accountId = account?.result?.id;

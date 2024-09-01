@@ -4,7 +4,7 @@ import { VoucherNoId } from "../types";
 import httpClient from "../httpClient";
 
 async function createVoucher(voucher: VoucherNoId) {
-  const res = await httpClient.post("api/v1/events/api/vouchers", voucher);
+  const res = await httpClient.post("events/api/vouchers", voucher);
   return res.data;
 }
 

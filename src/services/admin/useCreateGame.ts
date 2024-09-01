@@ -4,7 +4,7 @@ import { Game } from "../types";
 import httpClient from "../httpClient";
 
 async function createGame(game: Game) {
-  const res = await httpClient.post("api/v1/games/games", game);
+  const res = await httpClient.post("games/games", game);
   return res.data;
 }
 

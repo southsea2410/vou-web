@@ -6,7 +6,7 @@ import adminHttpClient from "../httpClient";
 import { GeneralProfileType } from "../types";
 
 async function getAllUsers() {
-  const response = await adminHttpClient.get("api/v1/users/all-users");
+  const response = await adminHttpClient.get("users/all-users");
   const data = response.data;
   return data;
 }

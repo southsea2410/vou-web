@@ -6,7 +6,7 @@ import { BrandType, GeneralProfileType } from "../types";
 type ProfileResponse = GeneralProfileType & BrandType & { id: string };
 
 async function getProfileByAccountId(accountId: string) {
-  const res = await httpClient.get("api/v1/users/all-users/account/" + accountId);
+  const res = await httpClient.get("users/all-users/account/" + accountId);
   return res.data;
 }
 

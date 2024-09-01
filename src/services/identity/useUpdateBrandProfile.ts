@@ -8,7 +8,7 @@ export type UpdateBrandProfileRequest = {
 };
 
 async function updateBrandProfile({ profile, userId }: UpdateBrandProfileRequest) {
-  const res = await httpClient.patch("api/v1/users/all-users/" + userId, profile);
+  const res = await httpClient.patch("users/all-users/" + userId, profile);
   return res.data;
 }
 

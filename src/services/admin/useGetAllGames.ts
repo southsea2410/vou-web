@@ -3,7 +3,7 @@ import httpClient from "../httpClient";
 import { Game } from "../types";
 
 async function getAllGames() {
-  const res = await httpClient.get("api/v1/games/games");
+  const res = await httpClient.get("games/games");
   return res.data;
 }
 

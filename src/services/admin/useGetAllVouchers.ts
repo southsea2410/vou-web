@@ -3,7 +3,7 @@ import httpClient from "../httpClient";
 import { Voucher } from "../types";
 
 async function getAllVouchers() {
-  const res = await httpClient.get("api/v1/events/api/vouchers");
+  const res = await httpClient.get("events/api/vouchers");
   return res.data;
 }
 

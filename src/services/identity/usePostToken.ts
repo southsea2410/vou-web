@@ -11,7 +11,7 @@ type LoginResponse = BasicResponse<{
 }>;
 
 async function sendLoginRequest({ username, password }: LoginRequest) {
-  const data = await noTokenClient.post("api/v1/identity/auth/token", { username, password });
+  const data = await noTokenClient.post("identity/auth/token", { username, password });
   return data.data;
 }
 

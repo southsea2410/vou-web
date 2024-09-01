@@ -5,7 +5,7 @@ import { Game } from "../types";
 export type UpdateGameReq = Game & { id: string };
 
 async function updateGame(game: UpdateGameReq) {
-  const res = await httpClient.put("api/v1/games/games", game);
+  const res = await httpClient.put("games/games", game);
   return res.data;
 }
 

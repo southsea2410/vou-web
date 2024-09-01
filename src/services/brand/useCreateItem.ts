@@ -4,7 +4,7 @@ import { Item } from "../types";
 import httpClient from "../httpClient";
 
 async function createItem(item: Item) {
-  const res = await httpClient.post("api/v1/events/api/items", item);
+  const res = await httpClient.post("events/api/items", item);
   return res.data;
 }
 

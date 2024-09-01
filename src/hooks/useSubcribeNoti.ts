@@ -6,8 +6,7 @@ import axios from "axios";
 
 async function subcribeNoti({ userId, token }: SubcribeNotiFn) {
   const response = await httpClient.post(
-    // "http://localhost:8086/notifications/api/notifications/register?userId=" +
-    "api/v1/notifications/api/notifications/register?userId=" + userId + "&token=" + token,
+    "notifications/api/notifications/register?userId=" + userId + "&token=" + token,
   );
   return response.data;
 }

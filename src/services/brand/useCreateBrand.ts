@@ -1,6 +1,6 @@
 import { UseMutationOptions, useMutation } from "@tanstack/react-query";
 import httpClient, { BasicResponse } from "../httpClient";
-import { GetAccountInfoResponse } from "../identity/useAccountInfo";
+import { GetAccountInfoResponse } from "../identity/useGetMyInfo";
 
 export type CreateBrandRequest = {
   fullName: string;
@@ -18,7 +18,7 @@ export type CreateBrandRequest = {
 };
 
 async function createBrand(account: CreateBrandRequest) {
-  const res = await httpClient.post("api/v1/users/all-users/create", account);
+  const res = await httpClient.post("users/all-users/create", account);
   return res.data;
 }
 

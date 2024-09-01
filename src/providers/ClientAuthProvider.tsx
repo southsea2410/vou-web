@@ -2,7 +2,7 @@
 
 import { toast } from "@/components/ui/use-toast";
 import httpClient from "@/services/httpClient";
-import useGetAccountInfo from "@/services/identity/useAccountInfo";
+import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import { usePathname } from "next/navigation";
 import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
 
@@ -73,7 +73,7 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
     }
   }, [setToken, callWarning]);
 
-  const { data: accountInfo, isSuccess: isAccountSuccess } = useGetAccountInfo({
+  const { data: accountInfo, isSuccess: isAccountSuccess } = useGetMyInfo({
     enabled: !!token,
   });
 
@@ -83,7 +83,7 @@ export default function ClientAuthProvider({ children }: { children: ReactNode }
 
       setAuth({
         isAuthenticated: true,
-        accountId: accountInfo.result?.id,
+        accountId: accountInfo?.id,
         logout: () => {
           localStorage.removeItem(TOKEN_KEY);
           setToken(null);

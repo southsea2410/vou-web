@@ -3,7 +3,7 @@ import httpClient from "../httpClient";
 import { Event } from "../types";
 
 async function getAllEvents() {
-  const res = await httpClient.get("api/v1/events/api/events");
+  const res = await httpClient.get("events/api/events");
   return res.data;
 }
 
