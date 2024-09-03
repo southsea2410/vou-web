@@ -1,7 +1,7 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import { VoucherNoId } from "../types";
 import httpClient from "../httpClient";
+import { VoucherNoId } from "../types";
 
 async function createVoucher(voucher: VoucherNoId) {
   const res = await httpClient.post("events/api/vouchers", voucher);

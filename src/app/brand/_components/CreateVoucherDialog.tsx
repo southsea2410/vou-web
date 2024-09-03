@@ -1,8 +1,12 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import DatePickerForm from "@/components/global/DatePickerForm";
 import LabelledInput from "@/components/global/LabelledInput";
+import { Select } from "@/components/global/Select";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,16 +20,13 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { Voucher, VoucherUnitValue } from "@/services/types";
-import { DialogTrigger } from "@radix-ui/react-dialog";
-import { Select } from "@/components/global/Select";
-import DatePickerForm from "@/components/global/DatePickerForm";
-import Image from "next/image";
-import { useMemo, useState } from "react";
 import { useUpload } from "@/hooks/useUpload";
+import { generateQR } from "@/lib/utils";
+import { useAuth } from "@/providers/ClientAuthProvider";
 import useCreateVoucher from "@/services/brand/useCreateVoucher";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
-import { useAuth } from "@/providers/ClientAuthProvider";
+import { Voucher, VoucherUnitValue } from "@/services/types";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 
 type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList; brand: any };
@@ -42,7 +43,8 @@ export default function CreateVoucherDialog() {
     return null;
   }, [uploadedImage]);
 
-  const { upload } = useUpload();
+  const { upload, uploadKey } = useUpload();
+  const { upload: uploadQR, uploadKey: uploadQRKey } = useUpload();
 
   const [disabledSubmit, setDisableSubmit] = useState(false);
 
@@ -61,10 +63,15 @@ export default function CreateVoucherDialog() {
 
   const handleSubmit = form.handleSubmit((data) => {
     form.trigger().then((isValid) => {
-      console.log(isValid);
       if (!isValid) return;
+
       setDisableSubmit(true);
-      upload(data.image[0], handleSubmitForm);
+
+      upload(data.image[0]);
+
+      generateQR(data.qrCode)
+        .then((file) => uploadQR(file))
+        .catch((err) => console.log(err));
     });
   });
 
@@ -74,19 +81,24 @@ export default function CreateVoucherDialog() {
     enabled: !!accountId,
   });
 
-  const handleSubmitForm = async (key: string) => {
+  const handleSubmitForm = async (key: string, qrKey: string) => {
     const data = form.getValues();
     const voucher = {
       ...data,
       image: key,
       brand: brandInfo,
+      qrCode: qrKey,
     };
 
     setDisableSubmit(false);
     createVoucher(voucher);
   };
-
-  form.register("unitValue", { required: true });
+  // effect submit form once complete uploading 2 files
+  useEffect(() => {
+    if (uploadKey && uploadQRKey) {
+      handleSubmitForm(uploadKey, uploadQRKey);
+    }
+  }, [uploadKey, uploadQRKey]);
 
   const unitValueSelect = VoucherUnitValue.map((i) => {
     return { value: i, label: i };

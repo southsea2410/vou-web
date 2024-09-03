@@ -5,11 +5,13 @@ import { useState } from "react";
 export type UploadState = "idle" | "starting" | "uploading" | "finishing" | "done" | "error";
 
 export function useUpload() {
+  const [uploadKey, setUploadKey] = useState<string | null>(null);
   const [uploadState, setUploadState] = useState<UploadState>("idle");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadError, setUploadError] = useState<Error | null>(null);
 
   return {
+    uploadKey,
     uploadState,
     uploadProgress,
     uploadError,
@@ -18,7 +20,7 @@ export function useUpload() {
 
       try {
         // Grab a pre-signed URL from our backend API:
-        const { key, presigned_upload_url } = await getPresignedUrl(file);
+        const { key, presigned_upload_url } = await getPresignedUrl(file.name);
         setUploadState("uploading");
         console.log("Uploading", file.name, "to", presigned_upload_url);
 
@@ -30,6 +32,7 @@ export function useUpload() {
 
         // Do something useful with this uploaded file; probably pass
         // this key to another API endpoint!
+        setUploadKey(key);
         onSuccess && (await onSuccess(key));
         setUploadState("done");
         return key;
@@ -41,9 +44,11 @@ export function useUpload() {
   };
 }
 
-async function getPresignedUrl(file: File): Promise<{ key: string; presigned_upload_url: string }> {
+export async function getPresignedUrl(
+  filename: string,
+): Promise<{ key: string; presigned_upload_url: string }> {
   try {
-    const key = crypto.randomUUID() + "_" + file.name;
+    const key = crypto.randomUUID() + "_" + filename;
     const response = await axios(`/api/presign/upload/${key}`, {
       method: "GET",
     });
@@ -64,34 +69,6 @@ function uploadFile(
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     console.log("Uploading to", presignedUploadUrl);
-    // const xhr = new XMLHttpRequest();
-    // xhr.upload.addEventListener("progress", (e) => {
-    //   if (e.lengthComputable) {
-    //     const pct = e.loaded / e.total;
-    //     onProgress(pct * 100);
-    //   }
-    // });
-    // xhr.upload.addEventListener("error", (e) => {
-    //   reject(new Error("Upload failed: " + e.toString()));
-    // });
-    // xhr.upload.addEventListener("abort", (e) => {
-    //   reject(new Error("Upload aborted: " + e.toString()));
-    // });
-    // xhr.addEventListener("load", (e) => {
-    //   if (xhr.status === 200) {
-    //     resolve();
-    //   } else {
-    //     reject(new Error("Upload failed " + xhr.status));
-    //   }
-    // });
-    // xhr.open("PUT", presignedUploadUrl, true);
-    // xhr.setRequestHeader("Content-Type", file.type);
-    // xhr.setRequestHeader("Content-Length", file.size.toString());
-    // try {
-    //   xhr.send(file);
-    // } catch (e: any) {
-    //   reject(new Error("Upload failed: " + e.toString()));
-    // }
 
     axios
       .put(presignedUploadUrl, file, {
