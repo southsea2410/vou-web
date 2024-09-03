@@ -48,15 +48,10 @@ const eventColumns = [
 ] as ColumnDef<Event>[];
 
 export default function Eventspage() {
-  const { data: profile } = useGetMyInfo();
+  const { accountId } = useAuth();
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
 
   const { data: events } = useGetEvents(profile?.id ?? "", { enabled: !!profile?.id });
-
-  const { accountId } = useAuth();
-
-  const { data: brandInfo } = useGetProfileByAccountId(accountId);
-
-  console.log(brandInfo);
 
   return (
     <div className="min-h-screen">

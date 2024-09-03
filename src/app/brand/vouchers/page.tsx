@@ -29,31 +29,47 @@ import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { useQueryClient } from "@tanstack/react-query";
-import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import useGetVouchers from "@/services/brand/useGetVouchers";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import { useAuth } from "@/providers/ClientAuthProvider";
+import S3Image from "@/components/global/S3Image";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
 export default function VouchersPage() {
-  const { data: profile } = useGetMyInfo();
-
+  const { accountId } = useAuth();
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
   const { data: vouchers } = useGetVouchers(profile?.id ?? "", { enabled: !!profile?.id });
 
   const [editDialog, setEditDialog] = useState<DialogState<Voucher>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Voucher>>({ open: false });
 
   const voucherColumns = [
+    voucherColumnHelper.accessor("voucherCode", { header: "Voucher Code" }),
+    voucherColumnHelper.accessor("qrCode", {
+      header: "QR Code",
+      cell(props) {
+        return <S3Image k={props.getValue()} alt={props.getValue()} />;
+      },
+      maxSize: 140,
+    }),
+    voucherColumnHelper.accessor("image", {
+      header: "Image",
+      minSize: 260,
+      cell(props) {
+        return <S3Image k={props.getValue()} alt="Voucher Image" />;
+      },
+    }),
     voucherColumnHelper.accessor("value", {
       header: "Value",
     }),
-    voucherColumnHelper.accessor("description", { header: "Description", minSize: 450 }),
+    voucherColumnHelper.accessor("description", { header: "Description" }),
     voucherColumnHelper.accessor("status", {
+      header: "Status",
       cell(props) {
         return <span>{props.getValue() === 1 ? "Active" : "Inactive"}</span>;
       },
     }),
-    voucherColumnHelper.accessor("voucherCode", { header: "Voucher Code" }),
-    voucherColumnHelper.accessor("qrCode", { header: "QR Code" }),
     voucherColumnHelper.display({
       header: "Actions",
       cell(props) {

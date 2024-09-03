@@ -28,6 +28,7 @@ export const VoucherUnitValue = ["PERCENT", "MINUS", "MINUS_PERCENT"] as const;
 
 export type Item = {
   id: string;
+  brand_id: string;
   name: string;
   icon: string;
   description: string;
@@ -74,5 +75,5 @@ export type Game = {
   itemSwappable: boolean;
 };
 
-export const GameTypes = ["quiz_game", "shaking_game"] as const;
+export const GameTypes = ["quiz", "shake"] as const;
 export type GameType = (typeof GameTypes)[number];

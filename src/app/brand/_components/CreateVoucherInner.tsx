@@ -11,8 +11,14 @@ import { EventFormData } from "@/services/brand/formSchemas";
 import { Select } from "@/components/global/Select";
 import { useMemo } from "react";
 import useGetAllVouchers from "@/services/admin/useGetAllVouchers";
+import { useAuth } from "@/providers/ClientAuthProvider";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import useGetVouchers from "@/services/brand/useGetVouchers";
 
 export default function CreateVoucherInner({ form }: { form: UseFormReturn<EventFormData> }) {
+  const { accountId } = useAuth();
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "listVoucher_Items",
@@ -21,7 +27,7 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Event
   const tommorow = new Date();
   tommorow.setDate(tommorow.getDate() + 1);
 
-  const { data: vouchers } = useGetAllVouchers();
+  const { data: vouchers } = useGetVouchers(profile?.id ?? "", { enabled: !!profile?.id });
 
   const vouchersSelectData = useMemo(() => {
     if (!vouchers) return [];

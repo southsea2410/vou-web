@@ -29,7 +29,7 @@ import { Voucher, VoucherUnitValue } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 
-type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList; brand: any };
+type CreateVoucherFormProps = Omit<Voucher, "id" | "image"> & { image: FileList };
 
 export default function CreateVoucherDialog() {
   const queryClient = useQueryClient();
@@ -81,24 +81,32 @@ export default function CreateVoucherDialog() {
     enabled: !!accountId,
   });
 
-  const handleSubmitForm = async (key: string, qrKey: string) => {
-    const data = form.getValues();
-    const voucher = {
-      ...data,
-      image: key,
-      brand: brandInfo,
-      qrCode: qrKey,
-    };
+  useEffect(() => {
+    if (isBrandInfoSuccess) {
+      form.setValue("brand_id", brandInfo?.id);
+      setDisableSubmit(false);
+    } else setDisableSubmit(true);
+  }, [brandInfo, form, isBrandInfoSuccess]);
 
-    setDisableSubmit(false);
-    createVoucher(voucher);
-  };
   // effect submit form once complete uploading 2 files
   useEffect(() => {
     if (uploadKey && uploadQRKey) {
+      const handleSubmitForm = async (key: string, qrKey: string) => {
+        const data = form.getValues();
+
+        const voucher = {
+          ...data,
+          image: key,
+          qrCode: qrKey,
+        };
+
+        setDisableSubmit(false);
+        createVoucher(voucher);
+      };
+
       handleSubmitForm(uploadKey, uploadQRKey);
     }
-  }, [uploadKey, uploadQRKey]);
+  }, [uploadKey, uploadQRKey, brandInfo?.id, createVoucher, form]);
 
   const unitValueSelect = VoucherUnitValue.map((i) => {
     return { value: i, label: i };
@@ -133,7 +141,7 @@ export default function CreateVoucherDialog() {
               {!!imgUri && <Image fill src={imgUri} alt="Voucher image" className="object-cover" />}
             </div>
             <div>
-              <Label className="mb-1.5">Item description</Label>
+              <Label className="mb-1.5">Voucher description</Label>
               <Textarea {...form.register("description", { required: true })} />
             </div>
             <div>

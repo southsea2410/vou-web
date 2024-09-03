@@ -2,7 +2,6 @@
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
-import { mockEvents } from "../mocks/mockEvents";
 import { Event } from "../types";
 import httpClient from "../httpClient";
 
@@ -15,9 +14,8 @@ type UseQueryOptionsOmitted<T> = Omit<UseQueryOptions<T>, "queryKey" | "queryFn"
 
 export default function useGetEvents(brand_id: string, opts?: UseQueryOptionsOmitted<Event[]>) {
   return useQuery<Event[]>({
-    queryKey: ["items"],
+    queryKey: ["events", brand_id],
     queryFn: () => getEvents(brand_id),
-    initialData: mockEvents,
     ...opts,
   });
 }

@@ -1,3 +1,4 @@
+import { GameType, GameTypes } from "../types";
 import { CreateEventRequest } from "./useCreateEvent";
 
 export type EventFormData = Omit<
@@ -9,8 +10,8 @@ export type EventFormData = Omit<
     startDate: Date;
     endDate: Date;
   };
-  games: string[];
-  trivia_time: string;
+  games: GameType[];
+  quiz_time: string;
   emails: [
     {
       id: string;

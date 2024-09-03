@@ -1,11 +1,11 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 
-import { Event } from "../types";
+import { Event, GameType } from "../types";
 import httpClient from "../httpClient";
 
 // Full-info Create Event API Schema
 export interface CreateEventRequest {
-  event: Event & { games: ("trivia" | "shake")[] };
+  event: Event;
   listGameId_StartTime: ListGameIdStartTime[];
   listVoucher_Items: ListVoucherItem[];
   emails: string[];
@@ -13,6 +13,7 @@ export interface CreateEventRequest {
 
 interface ListGameIdStartTime {
   gameId: number;
+  gameType: GameType;
   startTime: string;
 }
 

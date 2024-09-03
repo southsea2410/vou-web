@@ -7,6 +7,8 @@ import useGetItems from "@/services/brand/useGetItems";
 import { EventFormData } from "@/services/brand/formSchemas";
 import { Select } from "@/components/global/Select";
 import useGetAllItems from "@/services/admin/useGetAllItems";
+import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import { useAuth } from "@/providers/ClientAuthProvider";
 
 type CreateVoucherItemInputProps = {
   form: UseFormReturn<EventFormData>;
@@ -22,7 +24,9 @@ export default function CreateVoucherItemInput({
     name: `listVoucher_Items.${voucherIndex}.itemIds_quantities`,
   });
 
-  const { data: items } = useGetAllItems();
+  const { accountId } = useAuth();
+  const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
+  const { data: items } = useGetItems(profile?.id ?? "", { enabled: !!profile?.id });
 
   const handleItemChange = (itemId: string, index: number) => {
     form.setValue(`listVoucher_Items.${voucherIndex}.itemIds_quantities.${index}.itemId`, itemId);

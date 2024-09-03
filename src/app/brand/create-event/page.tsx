@@ -15,17 +15,14 @@ import BasicEventInfoInner from "../_components/BasicEventInfoInner";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherInner from "../_components/CreateVoucherInner";
 import InviteCoopInner from "../_components/InviteCoopInner";
-import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 import { useAuth } from "@/providers/ClientAuthProvider";
 
 export default function CreateEventPage() {
-  const eventForm = useForm<EventFormData>({ defaultValues: { games: [] } });
-
   const { accountId } = useAuth();
-
   const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
 
+  const eventForm = useForm<EventFormData>({ defaultValues: { games: [] } });
   const { upload } = useUpload();
 
   const { mutate: createEvent } = useCreateEvent({
@@ -47,15 +44,16 @@ export default function CreateEventPage() {
     const listGameId_StartTime: CreateEventRequest["listGameId_StartTime"] = formData.games.map(
       (game) => {
         const res = {
-          gameId: game === "trivia" ? 1 : 2,
-          startTime: game === "trivia" ? formData.trivia_time : "",
+          gameId: game === "quiz" ? 1 : 2,
+          gameType: game,
+          startTime: game === "quiz" ? formData.quiz_time : "",
         };
         return res;
       },
     );
 
     formData.games = undefined as never;
-    formData.trivia_time = undefined as never;
+    formData.quiz_time = undefined as never;
 
     const image = await upload(formData.event.image[0] as File);
     if (image) {

@@ -16,14 +16,14 @@ import { toast } from "@/components/ui/use-toast";
 import { Item } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useCreateItem from "@/services/brand/useCreateItem";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 import { useAuth } from "@/providers/ClientAuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpload } from "@/hooks/useUpload";
 
-type CreateItemFormProps = Omit<Item, "icon"> & { icon: FileList; brand: any };
+type CreateItemFormProps = Omit<Item, "icon"> & { icon: FileList };
 
 export default function CreateItemDialog() {
   const queryClient = useQueryClient();
@@ -70,12 +70,19 @@ export default function CreateItemDialog() {
     enabled: !!accountId,
   });
 
+  useEffect(() => {
+    if (isBrandInfoSuccess) {
+      setDisableSubmit(false);
+
+      form.setValue("brand_id", brandInfo?.id);
+    } else setDisableSubmit(true);
+  }, [brandInfo, form, isBrandInfoSuccess]);
+
   const handleSubmitForm = async (key: string) => {
     const data = form.getValues();
     const item = {
       ...data,
       icon: key,
-      brand: brandInfo,
     };
 
     setDisableSubmit(false);
@@ -109,7 +116,9 @@ export default function CreateItemDialog() {
           </form>
         </Form>
         <DialogFooter>
-          <Button onClick={handleSubmit}>Save changes</Button>
+          <Button onClick={handleSubmit} disabled={disabledSubmit}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -41,11 +41,10 @@ export default function ItemsPage() {
   // const { data: profile } = useGetMyInfo();
   const { accountId } = useAuth();
   const { data: profile } = useGetProfileByAccountId(accountId, { enabled: !!accountId });
+  const { data: items, isLoading } = useGetItems(profile?.id ?? "", { enabled: !!profile?.id });
 
   const [editDialog, setEditDialog] = useState<DialogState<Item>>({ open: false });
   const [deleteDialog, setDeleteDialog] = useState<DialogState<Item>>({ open: false });
-
-  const { data: items, isLoading } = useGetItems(profile?.id ?? "", { enabled: !!profile?.id });
 
   const itemColums = [
     itemColumnHelper.display({
