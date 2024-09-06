@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { Day, format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Path, UseFormReturn } from "react-hook-form";
 
@@ -8,6 +8,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/comp
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
+import { vi } from "date-fns/locale";
 
 type DatePickerFormProps<T extends object> = {
   form: UseFormReturn<T>;
@@ -26,6 +27,9 @@ export default function DatePickerForm<T extends object>({
   disabledFn = (date) => date < new Date(),
   required = false,
 }: DatePickerFormProps<T>) {
+  const handleDateChange = (date: Date | undefined) => {
+    date && form.setValue(name, new Date(date) as never);
+  };
   return (
     <FormField
       control={form.control}
@@ -51,8 +55,9 @@ export default function DatePickerForm<T extends object>({
             <PopoverContent className="p-0" align="start">
               <Calendar
                 mode="single"
+                locale={vi}
                 selected={field.value}
-                onSelect={field.onChange}
+                onSelect={handleDateChange}
                 disabled={disabledFn}
                 initialFocus
                 required={required}

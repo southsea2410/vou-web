@@ -119,8 +119,8 @@ export default function UpdateGameDialog({
     <Dialog open={open} onOpenChange={(s) => setState({ open: s })}>
       <DialogContent className="max-h-[85vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle>Create Game</DialogTitle>
-          <DialogDescription>Create a game mobile players</DialogDescription>
+          <DialogTitle>Update Game Infomation</DialogTitle>
+          <DialogDescription>{defaultGame.name}</DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form className="flex h-full flex-col gap-2">
@@ -128,11 +128,11 @@ export default function UpdateGameDialog({
             <LabelledInput onChange={handleChangeNewImage} label="Image" type="file" />
             <div className="relative aspect-[2/1] w-full">
               {!!previewImgUri && (
-                <Image fill src={previewImgUri} alt="Voucher image" className="object-cover" />
+                <Image fill src={previewImgUri} alt="Game image" className="object-cover" />
               )}
             </div>
             <div>
-              <Label className="mb-1.5">Item description</Label>
+              <Label className="mb-1.5">Game instruction</Label>
               <Textarea {...form.register("instruction", { required: true })} />
             </div>
             <div>

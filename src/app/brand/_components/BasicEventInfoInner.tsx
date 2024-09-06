@@ -31,7 +31,7 @@ const games: Game[] = GameTypes.map((type) => {
 });
 
 export default function BasicEventInfoInner({ form }: { form: UseFormReturn<EventFormData> }) {
-  const disableGameTime = !form.getValues("games").includes("quiz");
+  const disableGameTime = form.getValues("games").length == 0;
 
   const imgFile = form.watch("event.image");
 
@@ -41,6 +41,7 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Even
   );
 
   const startDate = form.watch("event.startDate");
+  startDate && console.log("startDate", startDate.toISOString());
 
   return (
     <div className="grid grid-cols-2 gap-20">

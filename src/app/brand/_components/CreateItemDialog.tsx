@@ -23,12 +23,12 @@ import { useAuth } from "@/providers/ClientAuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUpload } from "@/hooks/useUpload";
 
-type CreateItemFormProps = Omit<Item, "icon"> & { icon: FileList };
+type ItemFormProps = Omit<Item, "icon"> & { icon: FileList };
 
 export default function CreateItemDialog() {
   const queryClient = useQueryClient();
 
-  const form = useForm<CreateItemFormProps>();
+  const form = useForm<ItemFormProps>();
 
   const uploadedImage = form.watch("icon");
 

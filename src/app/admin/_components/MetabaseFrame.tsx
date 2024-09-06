@@ -2,12 +2,12 @@
 
 import React, { useCallback, useEffect, useState } from "react";
 
-import useGetMetabaseToken from "@/services/admin/useGetMetabaseToken";
+import useGetMetabaseToken, { MetabasePayload } from "@/services/admin/useGetMetabaseToken";
 
-export default function MetabaseFrame({ dashboardId }: { dashboardId: number }) {
+export default function MetabaseFrame({ payload }: { payload: MetabasePayload }) {
   const METABASE_SITE_URL = process.env.NEXT_PUBLIC_METABASE_SITE_URL;
 
-  const { data: token, isSuccess } = useGetMetabaseToken(dashboardId);
+  const { data: token, isSuccess } = useGetMetabaseToken(payload);
 
   const [src, setSrc] = useState<string | undefined>(undefined);
 

@@ -33,6 +33,7 @@ import useGetVouchers from "@/services/brand/useGetVouchers";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 import { useAuth } from "@/providers/ClientAuthProvider";
 import S3Image from "@/components/global/S3Image";
+import UpdateVoucherDialog from "../_components/UpdateVoucherDialog";
 
 const voucherColumnHelper = createColumnHelper<Voucher>();
 
@@ -144,43 +145,8 @@ export default function VouchersPage() {
         ) : (
           <LoadingBlock />
         )}
-        {/* Edit Voucher Dialog */}
-        <Dialog open={editDialog.open} onOpenChange={(s) => !s && setEditDialog({ open: s })}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit Voucher</DialogTitle>
-              <DialogDescription>
-                {editDialog.item?.voucherCode || editDialog.item?.qrCode}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-2">
-              <Form {...editForm}>
-                <form>
-                  <LabelledInput {...editForm.register("voucherCode")} label="Voucher Code" />
-                  <LabelledInput {...editForm.register("voucherCode")} label="QR Code" />
-                  <LabelledInput
-                    {...editForm.register("value", { required: true })}
-                    type="number"
-                    label="Value"
-                  />
-                  <DatePickerForm form={editForm} name="expiredDate" label="Expired Date" />
-                  <div>
-                    <Label className="mb-1.5">Voucher description</Label>
-                    <Textarea {...editForm.register("description")} />
-                  </div>
-                </form>
-              </Form>
-              <Label>Icon</Label>
-              <Button size="icon">
-                <UploadIcon />
-              </Button>
-            </div>
-            <DialogFooter>
-              <Button variant="ghost">Cancel</Button>
-              <Button>Save</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* Update Voucher Dialog */}
+        <UpdateVoucherDialog {...editDialog} setState={setEditDialog} />
 
         {/* Delete Voucher Dialog */}
         <Dialog open={deleteDialog.open} onOpenChange={(s) => !s && setDeleteDialog({ open: s })}>

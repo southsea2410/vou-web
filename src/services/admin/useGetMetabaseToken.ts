@@ -5,18 +5,25 @@ type MetabaseToken = {
   value: string;
 };
 
-async function getMetabaseToken(dashboardId: number) {
-  const res = await axios.get("/api/metabase?dashboardId=" + dashboardId);
+export type MetabasePayload = {
+  resource: { dashboard: number };
+  params?: {
+    [key: string]: any;
+  };
+};
+
+async function getMetabaseToken(payload: MetabasePayload) {
+  const res = await axios.post("/api/metabase", payload);
   return res.data;
 }
 
 export default function useGetMetabaseToken(
-  dashboardId: number,
+  payload: MetabasePayload,
   opts?: UseQueryOptions<MetabaseToken>,
 ) {
   return useQuery<MetabaseToken>({
     ...opts,
-    queryKey: ["metabase, token, " + dashboardId],
-    queryFn: () => getMetabaseToken(dashboardId),
+    queryKey: ["metabase token", JSON.stringify(payload)],
+    queryFn: () => getMetabaseToken(payload),
   });
 }

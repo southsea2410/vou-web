@@ -8,7 +8,11 @@ export default function AdminHomepage() {
     <div className="flex h-screen flex-col">
       <AdminNavbar />
       <div className="relative mt-10 h-[90vh]">
-        <MetabaseFrame dashboardId={2} />
+        <MetabaseFrame
+          payload={{
+            resource: { dashboard: 2 },
+          }}
+        />
       </div>
     </div>
   );

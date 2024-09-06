@@ -34,6 +34,7 @@ import useGetItems from "@/services/brand/useGetItems";
 import useGetProfile from "@/services/brand/useGetProfile";
 import useGetMyInfo from "@/services/identity/useGetMyInfo";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
+import UpdateItemDialog from "../_components/UpdateItemDialog";
 
 const itemColumnHelper = createColumnHelper<Item>();
 
@@ -88,9 +89,6 @@ export default function ItemsPage() {
     }),
   ] as ColumnDef<Item>[];
 
-  // Edit logics
-  const editForm = useForm<Item>({ defaultValues: editDialog.item });
-
   // Delete logics
   const { mutate: deleteItem } = useDeleteItem({
     onSuccess: () => {
@@ -130,33 +128,8 @@ export default function ItemsPage() {
             <ReactTable columns={itemColums} data={items} />
           )}
         </div>
-        {/* Edit Item Dialog */}
-        <Dialog open={editDialog.open} onOpenChange={(s) => !s && setEditDialog({ open: s })}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Edit {editDialog.item?.name}</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col gap-2">
-              <Form {...editForm}>
-                <form>
-                  <LabelledInput {...editForm.register("name")} label="Item name" />
-                  <div>
-                    <Label className="mb-1.5">Item description</Label>
-                    <Textarea {...editForm.register("description")} />
-                  </div>
-                </form>
-              </Form>
-              <Label>Icon</Label>
-              <Button size="icon">
-                <UploadIcon />
-              </Button>
-            </div>
-            <DialogFooter>
-              <Button variant="ghost">Cancel</Button>
-              <Button>Save</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* Update Item Dialog */}
+        <UpdateItemDialog {...editDialog} setState={setEditDialog} />
 
         {/* Delete Item Dialog */}
         <Dialog open={deleteDialog.open} onOpenChange={(s) => !s && setDeleteDialog({ open: s })}>
