@@ -59,6 +59,8 @@ export type PlayerType = {
   turns: number;
 };
 
+export type PlayerProfile = GeneralProfileType & PlayerType;
+
 export type BrandType = {
   brandName: string;
   field: string;
@@ -66,6 +68,8 @@ export type BrandType = {
   latitude: number;
   longitude: number;
 };
+
+export type BrandProfile = GeneralProfileType & BrandType;
 
 export type Game = {
   name: string;

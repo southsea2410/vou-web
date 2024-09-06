@@ -1,11 +1,9 @@
 "use client";
 
-import { Edit2, Trash2, UploadIcon } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Edit2, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import DatePickerForm from "@/components/global/DatePickerForm";
-import LabelledInput from "@/components/global/LabelledInput";
 import ReactTable from "@/components/global/ReactTable";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,15 +14,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteVoucher from "@/services/brand/useDeleteVoucher";
 import { DialogState, Voucher, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
 import LoadingBlock from "@/components/global/LoadingBlock";
@@ -95,9 +89,6 @@ export default function VouchersPage() {
       },
     }),
   ] as ColumnDef<Voucher>[];
-
-  // Edit logics
-  const editForm = useForm<Voucher>({ defaultValues: editDialog.item });
 
   const queryClient = useQueryClient();
 

@@ -10,7 +10,7 @@ export default function AdminHomepage() {
       <div className="relative mt-10 h-[90vh]">
         <MetabaseFrame
           payload={{
-            resource: { dashboard: 2 },
+            resource: { dashboard: 4 },
           }}
         />
       </div>
