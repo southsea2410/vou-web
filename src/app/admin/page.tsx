@@ -1,5 +1,3 @@
-import { Metadata } from "next";
-
 import AdminNavbar from "./_components/AdminNavbar";
 import MetabaseFrame from "./_components/MetabaseFrame";
 
@@ -11,6 +9,7 @@ export default function AdminHomepage() {
         <MetabaseFrame
           payload={{
             resource: { dashboard: 4 },
+            params: {},
           }}
         />
       </div>

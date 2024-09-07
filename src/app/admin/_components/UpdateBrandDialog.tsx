@@ -1,7 +1,4 @@
-import DatePickerForm from "@/components/global/DatePickerForm";
 import LabelledInput from "@/components/global/LabelledInput";
-import S3Image from "@/components/global/S3Image";
-import { Select } from "@/components/global/Select";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,28 +9,37 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import useUpdateVoucher from "@/services/brand/useUpdateVoucher";
-import useUpdateProfile from "@/services/identity/useUpdateProfile";
-import { BrandProfile, DialogState, VoucherUnitValue } from "@/services/types";
+import useUpdateProfile, { UpdateProfileRequest } from "@/services/identity/useUpdateProfile";
+import { BrandProfile, DialogState } from "@/services/types";
 import { useQueryClient } from "@tanstack/react-query";
+import { MapPin } from "lucide-react";
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
 
-type UpdateBrandFormProps = BrandProfile & { id: string };
+type UpdateBrandForm = UpdateProfileRequest<BrandProfile>["newProfile"];
 
 type UpdateBrandDialogProps = {
-  brand?: UpdateBrandFormProps;
+  item?: UpdateBrandForm;
   open: boolean;
-  setState: (state: DialogState<BrandProfile>) => void;
+  setState: (state: DialogState<UpdateBrandForm>) => void;
 };
 
-export default function UpdateBrandDialog({ brand, open, setState }: UpdateBrandDialogProps) {
+function getLocation(callback: PositionCallback) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(callback);
+    toast({ title: "Get current location successfully" });
+  } else {
+    toast({ title: "Geolocation is not supported by this browser.", variant: "destructive" });
+  }
+}
+
+export default function UpdateBrandDialog({ item: brand, open, setState }: UpdateBrandDialogProps) {
   const handleClose = () => setState({ open: false });
 
-  const editForm = useForm<UpdateBrandFormProps>({ defaultValues: brand });
+  const editForm = useForm<UpdateBrandForm>({ defaultValues: brand });
+
+  const formState = useFormState({ control: editForm.control });
 
   useEffect(() => {
     open && brand && editForm.reset(brand);
@@ -60,9 +66,12 @@ export default function UpdateBrandDialog({ brand, open, setState }: UpdateBrand
     brand?.id && updateProfile({ userId: brand?.id, newProfile: data });
   };
 
-  const unitValueSelect = VoucherUnitValue.map((i) => {
-    return { value: i, label: i };
-  });
+  const handleGetCurrentLocation = () => {
+    getLocation((position) => {
+      editForm.setValue("latitude", position.coords.latitude);
+      editForm.setValue("longitude", position.coords.longitude);
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={(s) => !s && handleClose()}>
@@ -73,8 +82,8 @@ export default function UpdateBrandDialog({ brand, open, setState }: UpdateBrand
         </DialogHeader>
         <div className="flex flex-col gap-2">
           <Form {...editForm}>
-            <form className="flex h-full flex-col gap-2">
-              <p>General information</p>
+            <form className="flex h-full flex-col gap-2.5">
+              <p className="font-medium text-primary">General information</p>
               <LabelledInput
                 {...editForm.register("fullName", { required: true })}
                 label="Full name"
@@ -84,41 +93,35 @@ export default function UpdateBrandDialog({ brand, open, setState }: UpdateBrand
                 label="Username"
               />
               <LabelledInput {...editForm.register("email", { required: true })} label="Email" />
-              <LabelledInput {...editForm.register("email", { required: true })} label="Phone" />
+              <LabelledInput {...editForm.register("phone", { required: true })} label="Phone" />
+              <p className="mt-2 font-medium text-primary">Brand information</p>
               <LabelledInput
-                {...editForm.register("image", { required: true })}
-                label="Image"
-                type="file"
+                {...editForm.register("brandName", { required: true })}
+                label="Brand name"
               />
-              <div className="relative aspect-[2/1] w-full">
-                {newImgUrl ? (
-                  <img src={newImgUrl} alt="icon" />
-                ) : (
-                  !!brand?.image && <S3Image k={brand.image} alt="icon" width={460} height={230} />
-                )}{" "}
-              </div>
-              <div>
-                <Label className="mb-1.5">Voucher description</Label>
-                <Textarea {...editForm.register("description", { required: true })} />
-              </div>
-              <div>
-                <Label className="mb-1.5">Unit value</Label>
-                <Select
-                  data={unitValueSelect}
-                  placeholder="Select..."
-                  onChange={handleChangeUnitValue}
+              <LabelledInput {...editForm.register("field", { required: true })} label="Field" />
+              <div className="flex items-end gap-2">
+                <LabelledInput
+                  {...editForm.register("latitude", { required: true })}
+                  type="number"
+                  label="Latitude"
                 />
+                <LabelledInput
+                  {...editForm.register("longitude", { required: true })}
+                  type="number"
+                  label="Longitude"
+                />
+                <Button variant="ghost" type="button" onClick={handleGetCurrentLocation}>
+                  <span>
+                    <MapPin className="mr-2" />
+                  </span>
+                  Current location
+                </Button>
               </div>
               <LabelledInput
-                {...editForm.register("value", { required: true })}
-                type="number"
-                label="Value"
-                required
+                {...editForm.register("address", { required: true })}
+                label="Address"
               />
-              <div>
-                <Label className="mb-1.5">Expire date</Label>
-                <DatePickerForm form={editForm} name={"expiredDate"} required />
-              </div>
             </form>
           </Form>
         </div>
@@ -126,7 +129,9 @@ export default function UpdateBrandDialog({ brand, open, setState }: UpdateBrand
           <Button variant="ghost" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleSubmitForm}>Save</Button>
+          <Button onClick={handleSubmitForm} disabled={!formState.isDirty && !formState.isValid}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

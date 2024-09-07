@@ -22,18 +22,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-type UpdateItemDialogProps = {
+type UpdateVoucherDialogProps = {
   item?: Voucher;
   open: boolean;
-  setState: (state: DialogState<Item>) => void;
+  setState: (state: DialogState<Voucher>) => void;
 };
 
-type UpdateVoucherFormProps = Voucher & { newImage: FileList };
+type UpdateVoucherForm = Voucher & { newImage: FileList };
 
-export default function UpdateVoucherDialog({ item, open, setState }: UpdateItemDialogProps) {
+export default function UpdateVoucherDialog({ item, open, setState }: UpdateVoucherDialogProps) {
   const handleClose = () => setState({ open: false });
 
-  const editForm = useForm<UpdateVoucherFormProps>({ defaultValues: item });
+  const editForm = useForm<UpdateVoucherForm>({ defaultValues: item });
 
   useEffect(() => {
     open && item && editForm.reset(item);

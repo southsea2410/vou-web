@@ -1,11 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import useCreateBrand, { CreateBrandRequest } from "@/services/brand/useCreateBrand";
-import { useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import useCreateBrand from "@/services/identity/useCreateProfile";
 import {
   Card,
   CardContent,

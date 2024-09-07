@@ -16,20 +16,23 @@ import AdminNavbar from "../_components/AdminNavbar";
 import {
   AccountRoleType,
   AccountRoles,
-  BrandType,
+  BrandProfile,
   DialogState,
   GeneralProfileType,
+  PlayerProfile,
 } from "@/services/types";
 import LoadingBlock from "@/components/global/LoadingBlock";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { MultiSelector } from "@/components/global/Multiselect";
 import { Select, SelectOptionType } from "@/components/global/Select";
 import { Label } from "@/components/ui/label";
-import useUpdateBrandProfile from "@/services/identity/useUpdateBrandProfile";
+import useUpdateProfile, { UpdateProfileRequest } from "@/services/identity/useUpdateProfile";
 import { toast } from "@/components/ui/use-toast";
-import { Edit2, Settings } from "lucide-react";
+import { Edit2, Eye, EyeOff, Trash } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
+import UpdateBrandDialog from "../_components/UpdateBrandDialog";
+import UpdatePlayerDialog, { UpdatePlayerForm } from "../_components/UpdatePlayerDialog";
+import useDeleteProfile from "@/services/identity/useDeleteProfile";
 
 const accountColumnHelper = createColumnHelper<GeneralProfileType & { id: string }>();
 
@@ -75,7 +78,46 @@ export default function AdminAccountPage() {
               size="icon"
               onClick={() => setEditDialog({ open: true, item: props.row.original })}
             >
+              {props.row.original.status ? <Eye /> : <EyeOff />}
+            </Button>
+          </div>
+        );
+      },
+    }),
+    accountColumnHelper.display({
+      header: "Actions",
+      size: 100,
+      cell(props) {
+        return (
+          <div className="flex justify-between">
+            <Button
+              size="icon"
+              className="aspect-square"
+              variant="ghost"
+              onClick={() => {
+                const role = props.row.original.role;
+
+                role == "brand" &&
+                  setUpdateBrandDialog({
+                    open: true,
+                    item: props.row.original as UpdateProfileRequest<BrandProfile>["newProfile"],
+                  });
+
+                role == "player" &&
+                  setUpdatePlayerDialog({
+                    open: true,
+                    item: props.row.original as UpdatePlayerForm,
+                  });
+              }}
+            >
               <Edit2 />
+            </Button>
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={() => setDeleteDialog({ open: true, item: props.row.original })}
+            >
+              <Trash />
             </Button>
           </div>
         );
@@ -87,7 +129,7 @@ export default function AdminAccountPage() {
 
   const { data: accounts } = useGetAllUsers();
 
-  const { mutate: updateProfile } = useUpdateBrandProfile({
+  const { mutate: updateProfile } = useUpdateProfile({
     onMutate: () => toast({ title: "Updating Brand...", description: "Updating brand status" }),
     onSuccess(data, variables, context) {
       toast({ title: "Success", description: "Brand status updated" });
@@ -97,6 +139,16 @@ export default function AdminAccountPage() {
   });
 
   const [editDialog, setEditDialog] = useState<DialogState<GeneralProfileType & { id: string }>>({
+    open: false,
+  });
+
+  const [updateBrandDialog, setUpdateBrandDialog] = useState<
+    DialogState<UpdateProfileRequest<BrandProfile>["newProfile"]>
+  >({
+    open: false,
+  });
+
+  const [updatePlayerDialog, setUpdatePlayerDialog] = useState<DialogState<UpdatePlayerForm>>({
     open: false,
   });
 
@@ -126,12 +178,41 @@ export default function AdminAccountPage() {
       if (editDialog.item.role === "brand")
         updateProfile({
           userId: editDialog.item?.id,
-          profile: {
+          newProfile: {
             ...editDialog.item,
             status: status === "1",
-          } as GeneralProfileType & BrandType & { id: string; role: AccountRoleType },
+          } as BrandProfile & { id: string; role: AccountRoleType },
         });
     }
+  };
+
+  const [deleteDialog, setDeleteDialog] = useState<
+    DialogState<GeneralProfileType & { id: string }>
+  >({
+    open: false,
+  });
+  // Delete logics
+  const { mutate: deleteProfile } = useDeleteProfile({
+    onSuccess: (_, variables) => {
+      toast({
+        title: "Profile deleted",
+        description: "Profile has been deleted successfully",
+      });
+      setDeleteDialog({ open: false });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error deleting profile",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    const item = deleteDialog.item;
+    if (!item) return;
+    deleteProfile(item.id);
   };
 
   return (
@@ -153,6 +234,11 @@ export default function AdminAccountPage() {
             />
           )}
         </div>
+
+        {/* Update Dialogs */}
+        <UpdateBrandDialog {...updateBrandDialog} setState={setUpdateBrandDialog} />
+        <UpdatePlayerDialog {...updatePlayerDialog} setState={setUpdatePlayerDialog} />
+
         {/* Edit Status Dialog */}
         <Dialog open={editDialog.open} onOpenChange={(s) => !s && setEditDialog({ open: s })}>
           <DialogContent>
@@ -171,6 +257,24 @@ export default function AdminAccountPage() {
               </Button>
               <Button variant="destructive" onClick={handleSubmitNewStatus}>
                 Save
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Profile Dialog */}
+        <Dialog open={deleteDialog.open} onOpenChange={(s) => !s && setDeleteDialog({ open: s })}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete {deleteDialog.item?.fullName}?</DialogTitle>
+              <DialogDescription>You will no longer see this item anymore!</DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="ghost" onClick={() => setDeleteDialog({ open: false })}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={handleDelete}>
+                Delete
               </Button>
             </DialogFooter>
           </DialogContent>
