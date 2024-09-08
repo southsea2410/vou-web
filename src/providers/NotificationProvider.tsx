@@ -61,7 +61,7 @@ export default function NotificationProvider({ children }: { children: ReactNode
       console.log("[Notification] Message received. ", payload);
       toast({
         title: payload.data?.title,
-        description: payload.data?.body,
+        description: payload.data?.description,
       });
     });
 
