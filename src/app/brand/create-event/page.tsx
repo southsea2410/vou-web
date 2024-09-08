@@ -17,6 +17,7 @@ import CreateVoucherInner from "../_components/CreateVoucherInner";
 import InviteCoopInner from "../_components/InviteCoopInner";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
 import { useAuth } from "@/providers/ClientAuthProvider";
+import { toISOStringWithTimezone } from "@/lib/utils";
 
 export default function CreateEventPage() {
   const { accountId } = useAuth();
@@ -46,17 +47,19 @@ export default function CreateEventPage() {
         const res = {
           gameId: game === "quiz" ? 1 : 2,
           gameType: game,
-          startTime: game === "quiz" ? formData.quiz_time : "",
+          startTime: formData.game_time,
         };
         return res;
       },
     );
 
     formData.games = undefined as never;
-    formData.quiz_time = undefined as never;
+    formData.game_time = undefined as never;
 
     const image = await upload(formData.event.image[0] as File);
     if (image) {
+      const startDate = formData.event.startDate;
+      const endDate = formData.event.endDate;
       const createEventData: CreateEventRequest = {
         listGameId_StartTime,
         listVoucher_Items: formData.listVoucher_Items,
@@ -65,8 +68,8 @@ export default function CreateEventPage() {
           ...formData.event,
           image: image,
           numberOfVoucher: 0,
-          startDate: formData.event.startDate.toISOString(),
-          endDate: formData.event.endDate.toISOString(),
+          startDate: toISOStringWithTimezone(startDate),
+          endDate: toISOStringWithTimezone(endDate),
         },
       };
 

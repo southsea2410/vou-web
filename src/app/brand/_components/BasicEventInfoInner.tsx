@@ -122,7 +122,7 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Even
         />
         <div>
           <Label className={disableGameTime ? "text-gray-300" : ""}>
-            Thời điểm bắt đầu game mỗi ngày (chỉ cho game Quiz)
+            Thời điểm bắt đầu game mỗi ngày
           </Label>
           <Timepicker form={form} disabled={disableGameTime} />
         </div>

@@ -27,9 +27,6 @@ export default function DatePickerForm<T extends object>({
   disabledFn = (date) => date < new Date(),
   required = false,
 }: DatePickerFormProps<T>) {
-  const handleDateChange = (date: Date | undefined) => {
-    date && form.setValue(name, new Date(date) as never);
-  };
   return (
     <FormField
       control={form.control}
@@ -57,7 +54,7 @@ export default function DatePickerForm<T extends object>({
                 mode="single"
                 locale={vi}
                 selected={field.value}
-                onSelect={handleDateChange}
+                onSelect={field.onChange}
                 disabled={disabledFn}
                 initialFocus
                 required={required}
