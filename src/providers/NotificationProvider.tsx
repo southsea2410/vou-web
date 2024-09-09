@@ -24,12 +24,6 @@ type NotificationContextType = {
   subcribe_successful: boolean;
 };
 
-type NotificationType = {
-  title: string;
-  description?: string;
-  imageUrl?: string;
-};
-
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export default function NotificationProvider({ children }: { children: ReactNode }) {
@@ -60,8 +54,8 @@ export default function NotificationProvider({ children }: { children: ReactNode
     onMessage(messaging, (payload) => {
       console.log("[Notification] Message received. ", payload);
       toast({
-        title: payload.data?.title,
-        description: payload.data?.description,
+        title: payload.notification?.title,
+        description: payload.notification?.body,
       });
     });
 

@@ -11,7 +11,8 @@ export type EventFormData = Omit<
     endDate: Date;
   };
   games: GameType[];
-  game_time: string;
+  quiz_time: string;
+  shake_time: string;
   emails: [
     {
       id: string;

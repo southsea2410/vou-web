@@ -31,7 +31,10 @@ const games: Game[] = GameTypes.map((type) => {
 });
 
 export default function BasicEventInfoInner({ form }: { form: UseFormReturn<EventFormData> }) {
-  const disableGameTime = form.getValues("games").length == 0;
+  const currentGames = form.watch("games");
+
+  const disableQuizTime = !currentGames.length || !currentGames.includes("quiz");
+  const disableShakeTime = !currentGames.length || !currentGames.includes("shaking");
 
   const imgFile = form.watch("event.image");
 
@@ -80,51 +83,58 @@ export default function BasicEventInfoInner({ form }: { form: UseFormReturn<Even
           <Input type="file" {...form.register("event.image")} required />
         </div>
         <div className="aspect-[2/1]">{!!imgUrl && <img src={imgUrl} />}</div>
-        <FormField
-          control={form.control}
-          name="games"
-          render={() => (
-            <FormItem>
-              <div className="mb-4">
-                <FormLabel>Chọn game sẽ sử dụng trong sự kiện</FormLabel>
-                <FormDescription>Chọn ít nhất 1</FormDescription>
-              </div>
-              {games.map((item) => (
-                <FormField
-                  key={item.id}
-                  control={form.control}
-                  name="games"
-                  render={({ field }) => {
-                    return (
-                      <FormItem
-                        key={item.id}
-                        className="flex flex-row items-start space-x-3 space-y-0"
-                      >
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(item.id)}
-                            onCheckedChange={(checked) => {
-                              return checked
-                                ? field.onChange([...field.value, item.id])
-                                : field.onChange(field.value?.filter((value) => value !== item.id));
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="font-normal">{item.label}</FormLabel>
-                      </FormItem>
-                    );
-                  }}
-                />
-              ))}
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div>
-          <Label className={disableGameTime ? "text-gray-300" : ""}>
-            Thời điểm bắt đầu game mỗi ngày
-          </Label>
-          <Timepicker form={form} disabled={disableGameTime} />
+        <div className="flex gap-5">
+          <FormField
+            control={form.control}
+            name="games"
+            render={() => (
+              <FormItem>
+                <div className="mb-1.5">
+                  <FormLabel>Game(s) use in this Event</FormLabel>
+                  <FormDescription>At least 1</FormDescription>
+                </div>
+                {games.map((item) => (
+                  <FormField
+                    key={item.id}
+                    control={form.control}
+                    name="games"
+                    render={({ field }) => {
+                      return (
+                        <FormItem
+                          key={item.id}
+                          className="flex flex-row items-start space-x-3 space-y-0"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value?.includes(item.id)}
+                              onCheckedChange={(checked) => {
+                                return checked
+                                  ? field.onChange([...field.value, item.id])
+                                  : field.onChange(
+                                      field.value?.filter((value) => value !== item.id),
+                                    );
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="font-normal">{item.label}</FormLabel>
+                        </FormItem>
+                      );
+                    }}
+                  />
+                ))}
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div>
+            <Label
+              className={disableQuizTime && disableShakeTime ? "text-gray-300" : "" + " mb-1.5"}
+            >
+              Start time every day
+            </Label>
+            <Timepicker form={form} name="quiz_time" disabled={disableQuizTime} />
+            <Timepicker form={form} name="shake_time" disabled={disableShakeTime} />
+          </div>
         </div>
       </div>
     </div>

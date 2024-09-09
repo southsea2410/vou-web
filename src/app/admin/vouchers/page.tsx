@@ -3,7 +3,7 @@
 import ReactTable from "@/components/global/ReactTable";
 import { Separator } from "@/components/ui/separator";
 import useGetAllVouchers from "@/services/admin/useGetAllVouchers";
-import { Voucher, VoucherUnitValue } from "@/services/types";
+import { Voucher, VoucherTypes, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 
 import AdminNavbar from "../_components/AdminNavbar";
@@ -23,10 +23,9 @@ export default function VouchersPage() {
       filterFn: "arrIncludesSome",
     }),
     voucherColumnHelper.accessor("description", { header: "Description", minSize: 450 }),
-    voucherColumnHelper.accessor("status", {
-      cell(props) {
-        return <span>{props.getValue() === 1 ? "Active" : "Inactive"}</span>;
-      },
+    voucherColumnHelper.accessor("voucherType", {
+      header: "Type",
+      filterFn: "arrIncludesSome",
     }),
     voucherColumnHelper.accessor("voucherCode", { header: "Voucher Code" }),
     voucherColumnHelper.accessor("qrCode", { header: "QR Code" }),
@@ -43,6 +42,7 @@ export default function VouchersPage() {
             columns={voucherColumns}
             filterOptions={{
               unitValue: Array.from(VoucherUnitValue),
+              voucherType: Array.from(VoucherTypes),
             }}
             data={vouchers}
           />

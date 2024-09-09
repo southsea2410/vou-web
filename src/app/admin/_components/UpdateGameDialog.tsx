@@ -23,7 +23,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useUpload } from "@/hooks/useUpload";
 import useUpdateGame from "@/services/admin/useUpdateGame";
 import useGetObjectUrl from "@/hooks/useGetObjectUrl";
-import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 
 type UpdatedGameFormProps = Game & { id: string };

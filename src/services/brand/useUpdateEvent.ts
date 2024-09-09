@@ -4,7 +4,7 @@ import { Event } from "../types";
 import httpClient from "../httpClient";
 
 async function updateEvent(newEvent: Event) {
-  const res = await httpClient.patch(`/events/${newEvent.id}`, newEvent);
+  const res = await httpClient.put(`/events/api/events`, newEvent);
   return res.data;
 }
 

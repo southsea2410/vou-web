@@ -25,9 +25,7 @@ export type UpdatePlayerForm = UpdateProfileRequest<PlayerProfile>["newProfile"]
   newImage: FileList;
 };
 
-type UpdatePlayerDialogProps = {
-  item?: UpdatePlayerForm;
-  open: boolean;
+type UpdatePlayerDialogProps = DialogState<UpdatePlayerForm> & {
   setState: (state: DialogState<UpdatePlayerForm>) => void;
 };
 

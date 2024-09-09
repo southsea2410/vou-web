@@ -33,6 +33,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import UpdateBrandDialog from "../_components/UpdateBrandDialog";
 import UpdatePlayerDialog, { UpdatePlayerForm } from "../_components/UpdatePlayerDialog";
 import useDeleteProfile from "@/services/identity/useDeleteProfile";
+import CreateAccountDialog from "../_components/CreateAccountDialog";
 
 const accountColumnHelper = createColumnHelper<GeneralProfileType & { id: string }>();
 
@@ -219,7 +220,10 @@ export default function AdminAccountPage() {
     <div className="min-h-screen">
       <AdminNavbar />
       <div className="container py-4">
-        <h1 className="mb-2 text-3xl">Accounts Management</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="mb-2 text-3xl">Accounts Management</h1>
+          <CreateAccountDialog />
+        </div>
         <Separator className="mb-5" />
         <div>
           {!accounts ? (

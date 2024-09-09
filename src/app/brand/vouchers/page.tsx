@@ -17,7 +17,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import useDeleteVoucher from "@/services/brand/useDeleteVoucher";
-import { DialogState, Voucher, VoucherUnitValue } from "@/services/types";
+import { DialogState, Voucher, VoucherTypes, VoucherUnitValue } from "@/services/types";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import BrandNavbar from "../_components/BrandNavbar";
 import CreateVoucherDialog from "../_components/CreateVoucherDialog";
@@ -59,11 +59,9 @@ export default function VouchersPage() {
       header: "Value",
     }),
     voucherColumnHelper.accessor("description", { header: "Description" }),
-    voucherColumnHelper.accessor("status", {
-      header: "Status",
-      cell(props) {
-        return <span>{props.getValue() === 1 ? "Active" : "Inactive"}</span>;
-      },
+    voucherColumnHelper.accessor("voucherType", {
+      header: "Type",
+      filterFn: "arrIncludesSome",
     }),
     voucherColumnHelper.display({
       header: "Actions",
@@ -130,6 +128,7 @@ export default function VouchersPage() {
             columns={voucherColumns}
             filterOptions={{
               unitValue: Array.from(VoucherUnitValue),
+              voucherType: Array.from(VoucherTypes),
             }}
             data={vouchers}
           />

@@ -25,7 +25,7 @@ import { generateQR } from "@/lib/utils";
 import { useAuth } from "@/providers/ClientAuthProvider";
 import useCreateVoucher from "@/services/brand/useCreateVoucher";
 import useGetProfileByAccountId from "@/services/brand/useGetProfileByAccountId";
-import { Voucher, VoucherUnitValue } from "@/services/types";
+import { Voucher, VoucherTypes, VoucherUnitValue } from "@/services/types";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -115,6 +115,14 @@ export default function CreateVoucherDialog() {
   const handleChangeUnitValue = (value: string) => {
     form.setValue("unitValue", value as never);
   };
+
+  const voucherTypeSelect = VoucherTypes.map((i) => {
+    return { value: i, label: i };
+  });
+
+  const handleChangeVoucherType = (value: string) => {
+    form.setValue("voucherType", value as never);
+  };
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -148,7 +156,7 @@ export default function CreateVoucherDialog() {
               <Label className="mb-1.5">Unit value</Label>
               <Select
                 data={unitValueSelect}
-                placeholder="Select..."
+                placeholder="Unit..."
                 onChange={handleChangeUnitValue}
               />
             </div>
@@ -158,6 +166,14 @@ export default function CreateVoucherDialog() {
               label="Value"
               required
             />
+            <div>
+              <Label className="mb-1.5">Voucher Type</Label>
+              <Select
+                data={voucherTypeSelect}
+                placeholder="Type..."
+                onChange={handleChangeVoucherType}
+              />
+            </div>
             <div>
               <Label className="mb-1.5">Expire date</Label>
               <DatePickerForm form={form} name={"expiredDate"} required />

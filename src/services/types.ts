@@ -21,10 +21,13 @@ export type Voucher = {
   description: string;
   expiredDate: string;
   status: number;
+  voucherType: VoucherType;
   unitValue: (typeof VoucherUnitValue)[number];
 };
 export type VoucherNoId = Omit<Voucher, "id" | "brand_id">;
 export const VoucherUnitValue = ["PERCENT", "MINUS", "MINUS_PERCENT"] as const;
+export const VoucherTypes = ["online", "offline"] as const;
+export type VoucherType = (typeof VoucherTypes)[number];
 
 export type Item = {
   id: string;
@@ -79,5 +82,5 @@ export type Game = {
   itemSwappable: boolean;
 };
 
-export const GameTypes = ["quiz", "shake"] as const;
+export const GameTypes = ["quiz", "shaking"] as const;
 export type GameType = (typeof GameTypes)[number];

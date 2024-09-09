@@ -92,7 +92,7 @@ export default function UpdateVoucherDialog({ item, open, setState }: UpdateVouc
     <Dialog open={open} onOpenChange={(s) => !s && handleClose()}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Item</DialogTitle>
+          <DialogTitle>Edit Voucher</DialogTitle>
           <DialogDescription>{item?.voucherCode}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2">

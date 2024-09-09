@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
+import { getLocation } from "@/lib/utils";
 import useUpdateProfile, { UpdateProfileRequest } from "@/services/identity/useUpdateProfile";
 import { BrandProfile, DialogState } from "@/services/types";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,20 +20,9 @@ import { useForm, useFormState } from "react-hook-form";
 
 type UpdateBrandForm = UpdateProfileRequest<BrandProfile>["newProfile"];
 
-type UpdateBrandDialogProps = {
-  item?: UpdateBrandForm;
-  open: boolean;
+type UpdateBrandDialogProps = DialogState<UpdateBrandForm> & {
   setState: (state: DialogState<UpdateBrandForm>) => void;
 };
-
-function getLocation(callback: PositionCallback) {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(callback);
-    toast({ title: "Get current location successfully" });
-  } else {
-    toast({ title: "Geolocation is not supported by this browser.", variant: "destructive" });
-  }
-}
 
 export default function UpdateBrandDialog({ item: brand, open, setState }: UpdateBrandDialogProps) {
   const handleClose = () => setState({ open: false });

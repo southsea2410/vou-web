@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/use-toast";
 import { ClassValue, clsx } from "clsx";
 import QRCode from "qrcode";
 import { twMerge } from "tailwind-merge";
@@ -50,3 +51,12 @@ export const toISOStringWithTimezone = (date: Date) => {
     "Z"
   );
 };
+
+export function getLocation(callback: PositionCallback) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(callback);
+    toast({ title: "Get current location successfully" });
+  } else {
+    toast({ title: "Geolocation is not supported by this browser.", variant: "destructive" });
+  }
+}

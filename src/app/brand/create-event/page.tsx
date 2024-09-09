@@ -1,6 +1,5 @@
 "use client";
 
-import QRCode from "qrcode";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -47,14 +46,15 @@ export default function CreateEventPage() {
         const res = {
           gameId: game === "quiz" ? 1 : 2,
           gameType: game,
-          startTime: formData.game_time,
+          startTime: game === "quiz" ? formData.quiz_time : formData.shake_time,
         };
         return res;
       },
     );
 
     formData.games = undefined as never;
-    formData.game_time = undefined as never;
+    formData.quiz_time = undefined as never;
+    formData.shake_time = undefined as never;
 
     const image = await upload(formData.event.image[0] as File);
     if (image) {
