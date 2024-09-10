@@ -184,6 +184,15 @@ export default function AdminAccountPage() {
             status: status === "1",
           } as BrandProfile & { id: string; role: AccountRoleType },
         });
+
+      if (editDialog.item.role === "player")
+        updateProfile({
+          userId: editDialog.item?.id,
+          newProfile: {
+            ...editDialog.item,
+            status: status === "1",
+          } as PlayerProfile & { id: string; role: AccountRoleType },
+        });
     }
   };
 

@@ -24,6 +24,7 @@ import { useUpload } from "@/hooks/useUpload";
 import useUpdateGame from "@/services/admin/useUpdateGame";
 import useGetObjectUrl from "@/hooks/useGetObjectUrl";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UpdatedGameFormProps = Game & { id: string };
 
@@ -59,6 +60,8 @@ export default function UpdateGameDialog({
 
   const [disabledSubmit, setDisableSubmit] = useState(false);
 
+  const queryClient = useQueryClient();
+
   const { mutate: updateGame } = useUpdateGame({
     onSuccess(data) {
       toast({
@@ -69,6 +72,8 @@ export default function UpdateGameDialog({
           </pre>
         ),
       });
+
+      queryClient.invalidateQueries({ queryKey: ["all_games"] });
     },
     onError(err) {
       toast({ title: "Failed to update game", description: err.message });
