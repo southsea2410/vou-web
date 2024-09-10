@@ -4,7 +4,7 @@ import { Voucher } from "../types";
 import httpClient from "../httpClient";
 
 async function updateVoucher(newVoucher: Voucher) {
-  const res = await httpClient.patch(`/events/${newVoucher.id}`, newVoucher);
+  const res = await httpClient.put(`/events/api/vouchers`, newVoucher);
   return res.data;
 }
 

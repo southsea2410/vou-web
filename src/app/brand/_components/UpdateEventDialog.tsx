@@ -63,7 +63,9 @@ export default function UpdateEventDialog({ item, open, setState }: UpdateEventD
   const { upload } = useUpload();
 
   const handleUpload = () => {
-    if (!newImgFile) {
+    console.log("handleUpload", newImgFile);
+    if (!newImgFile || !newImgFile.length) {
+      console.log("no new image, submitting form");
       handleSubmitForm(item?.image ?? "");
       return;
     }

@@ -33,7 +33,7 @@ export default function CreateVoucherInner({ form }: { form: UseFormReturn<Event
     if (!vouchers) return [];
     return vouchers.map((voucher) => ({
       value: voucher.id,
-      label: voucher.voucherCode,
+      label: voucher.voucherCode + " (" + voucher.voucherType + ")",
     })) as [{ value: string; label: string }];
   }, [vouchers]);
 
